@@ -19,6 +19,7 @@ import { BottomSheet } from "react-native-btr";
 const { width, height } = Dimensions.get("window");
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
+import LocationDetail from "../../utils/components/LocationDetail";
 
 const Appliance = ({ navigation }) => {
   const styleTypes = ["dark-content"];
@@ -348,7 +349,7 @@ const Appliance = ({ navigation }) => {
             color: "#00796A",
           }}
         >
-          Sector 104, Noida
+          <LocationDetail />
         </Text>
         {/* <Image
           source={require("../../assets/logo/pen.png")}
@@ -713,7 +714,7 @@ const Appliance = ({ navigation }) => {
             color: "#fff",
           }}
         >
-          charge your Wallet
+          Confirm Booking
         </Text>
       </TouchableOpacity>
 
