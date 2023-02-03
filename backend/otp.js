@@ -15,7 +15,7 @@ import {
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 import { useDispatch } from "react-redux";
-import { login } from "../backend/slice";
+import { login, setUserData } from "./slice";
 
 const Otp = ({ navigation, route }) => {
   const data = route?.params?.data;
@@ -25,7 +25,7 @@ const Otp = ({ navigation, route }) => {
   const fourthInput = useRef();
   const [visible, setVisible] = useState(false);
   const [_otp, setOtp] = useState({ 1: "", 2: "", 3: "", 4: "" });
-  //const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const confirmOtp = async () => {
     setVisible(true);
@@ -43,6 +43,8 @@ const Otp = ({ navigation, route }) => {
         ToastAndroid.show("Logged in successfully!", ToastAndroid.SHORT);
         //dispatch(login(res.data.data.token));
         navigation.navigate("Homem");
+        console.log("Login Successful");
+        dispatch(setUserData(data.mobile_number));
       });
     } catch (error) {
       setVisible(false);
@@ -65,7 +67,6 @@ const Otp = ({ navigation, route }) => {
         hidden={false}
         backgroundColor="#00796A"
       />
-
       {/* <Text style={styles.title}>Email verification code</Text> */}
       <Text style={styles.content}>
         We have sent you 4 digit verification code on {""}

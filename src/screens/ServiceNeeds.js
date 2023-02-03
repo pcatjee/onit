@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import "react-native";
@@ -17,6 +18,8 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import HomeScreen from "../../utils/components/slider";
+import LocationDetail from "../../utils/components/LocationDetail";
+import serviceList from "../../const/serviceList";
 
 const { height, width } = Dimensions.get("window");
 
@@ -24,6 +27,33 @@ const ServiceNeeds = ({ navigation }) => {
   // const Images = [
 
   // ]
+  const [text, onChangeText] = useState("");
+  const extraction = serviceList.filter((curElem) => {
+    return curElem.name.toLowerCase().includes(text.toLowerCase());
+  });
+  const Card = ({ services }) => {
+    return (
+      <TouchableOpacity
+        style={
+          services.isTrending === true
+            ? styles.buttonTrendingService
+            : styles.button
+        }
+        onPress={() => {
+          navigation.navigate("Services", services);
+        }}
+      >
+        <Image
+          style={{
+            height: 45,
+            width: 45,
+          }}
+          source={services.img}
+        />
+        <Text style={{ marginTop: 5 }}>{services.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#00796A" }}>
@@ -41,7 +71,7 @@ const ServiceNeeds = ({ navigation }) => {
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "center",
+            justifyContent: "space-around",
             alignItems: "center",
             backgroundColor: "#00796A",
             height: 45,
@@ -51,28 +81,8 @@ const ServiceNeeds = ({ navigation }) => {
             borderRadius: 4,
           }}
         >
-          <Image
-            source={require("../../assets/logo/111.png")}
-            style={{
-              padding: 10,
-              margin: 5,
-              height: 25,
-              width: 25,
-              resizeMode: "stretch",
-              alignItems: "center",
-            }}
-          />
-          <Text
-            style={{
-              flex: 1,
-              fontWeight: "800",
-              fontSize: 18,
-              color: "#fff",
-              marginLeft: 5,
-            }}
-          >
-            Sector XXX,Noida
-          </Text>
+          <LocationDetail color={"#fff"} />
+
           <Image
             source={require("../../assets/logo/alert.png")}
             style={{
@@ -119,9 +129,11 @@ const ServiceNeeds = ({ navigation }) => {
               marginLeft: 5,
               letterSpacing: 0,
             }}
+            onChangeText={onChangeText}
             placeholder="Search for a service"
             underlineColorAndroid="transparent"
           />
+
           <Image
             source={require("../../assets/logo/mic.png")}
             style={{
@@ -201,11 +213,24 @@ const ServiceNeeds = ({ navigation }) => {
         </Text>
 
         {/* For services  */}
-        <ScrollView>
+
+        <FlatList
+          columnWrapperStyle={{ justifyContent: "center" }}
+          numColumns={3}
+          data={extraction}
+          renderItem={({ item }) => {
+            return <Card services={item} />;
+          }}
+        />
+
+        {/* ======================== */}
+
+        {/* <ScrollView>
           <View
             style={{
               justifyContent: "center",
               alignItems: "center",
+              marginLeft: 15,
             }}
           >
             <View style={styles.container}>
@@ -384,7 +409,7 @@ const ServiceNeeds = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </View>
   );
@@ -404,31 +429,30 @@ const styles = StyleSheet.create({
     height: 102,
     width: "93%",
   },
-  button0: {
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#F8F8F8",
     borderRadius: 8,
     padding: 0,
     height: 102,
     width: 102,
+    margin: 10,
+    marginBottom: 15,
+    borderWidth: 1.2,
+    // borderColor: "#FFBB00",
+  },
+  buttonTrendingService: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F8F8",
+    borderRadius: 8,
+    padding: 0,
+    height: 102,
+    width: 102,
+    margin: 10,
     marginBottom: 15,
     borderWidth: 1.2,
     borderColor: "#FFBB00",
-  },
-  button1: {
-    backgroundColor: "#F8F8F8",
-    borderRadius: 8,
-    padding: 0,
-    height: 102,
-    width: 102,
-    marginBottom: 15,
-  },
-  button2: {
-    backgroundColor: "#F8F8F8",
-    borderRadius: 8,
-    padding: 0,
-    height: 102,
-    width: 102,
-    marginBottom: 15,
-    marginLeft: 15,
   },
 });

@@ -12,16 +12,20 @@ import {
   ImageRequireSource,
   TouchableOpacity,
   ToastAndroid,
-  ScrollView,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { BottomSheet } from "react-native-btr";
 const { width, height } = Dimensions.get("window");
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import LocationDetail from "../../utils/components/LocationDetail";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../../backend/slice";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Plumber = ({ navigation }) => {
+const Services = ({ navigation, route }) => {
+  const services = route.params;
   const styleTypes = ["dark-content"];
   const [visibleStatusBar, setVisibleStatusBar] = useState(false);
   const [styleStatusBar, setStyleStatusBar] = useState(styleTypes[0]);
@@ -34,7 +38,7 @@ const Plumber = ({ navigation }) => {
   const [cit, setCity] = useState();
   const [pincod, setPincode] = useState();
   const [stat, setStat] = useState();
-  const [contry, setCountry] = useState();
+  // const [contry, setCountry] = useState();
   const [naam, setName] = useState();
 
   const [selectedValue, setSelectedValue] = useState("");
@@ -48,16 +52,26 @@ const Plumber = ({ navigation }) => {
   //8 console.log(selectedValue);
   //console.log(mobile_number);
 
+  const phoneNumber = useSelector((state) => state.auth.userInfo);
+  const city = useSelector((state) => state.auth.city);
+  const country = useSelector((state) => state.auth.country);
+  const district = useSelector((state) => state.auth.district);
+  const name = useSelector((state) => state.auth.name);
+  const region = useSelector((state) => state.auth.region);
+  const street = useSelector((state) => state.auth.street);
+  const streetNumber = useSelector((state) => state.auth.streetNumber);
+  const subRegion = useSelector((state) => state.auth.subRegion);
+
   const onsubmit = async () => {
     setVisible(true);
     let specific_requirement = text;
-    let mobile_number = alternate;
+    let mobile_number = phoneNumber;
     let house_number = houseno;
     let locality = local;
     let city = cit;
     let state = stat;
     let pincode = pincod;
-    let country = contry;
+    // let country = contry;
     let name = naam;
     let time_preference_type = selectedValue;
 
@@ -65,11 +79,11 @@ const Plumber = ({ navigation }) => {
       personal_details: {
         primary_phone: {
           country_code: "+91",
-          mobile_number: alternate,
+          mobile_number: phoneNumber,
         },
         alternate_phone: {
           country_code: "+91",
-          mobile_number: alternate,
+          mobile_number: phoneNumber,
         },
         name: naam,
       },
@@ -77,9 +91,9 @@ const Plumber = ({ navigation }) => {
       service_provided_for: "637b7a0e7c7cd9e139b39d1e",
       address_details: {
         house_number: houseno,
-        locality: local,
+        locality: district,
         city: city,
-        state: state,
+        state: region,
         pincode: pincode,
         country: country,
       },
@@ -120,14 +134,15 @@ const Plumber = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.sectionStyle}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
         // onPress={toggleBottomNavigationView}
         >
           <Image
             source={require("../../assets/logo/location.png")}
             style={styles.imageStyle}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
         {/* for bottomsheet */}
         {/* <BottomSheet
           visible={visible}
@@ -340,17 +355,7 @@ const Plumber = ({ navigation }) => {
           </View>
         </BottomSheet> */}
 
-        <Text
-        // style={{
-        //   flex: 0.5,
-        //   marginLeft: 16,
-        //   fontSize: 18,
-        //   fontWeight: "700",
-        //   // color: "#00796A",
-        // }}
-        >
-          <LocationDetail color={"#00796A"} />
-        </Text>
+        <LocationDetail color={"#00796A"} />
         {/* <Image
           source={require("../../assets/logo/pen.png")}
           style={{ height: 25, width: 25 }}
@@ -360,7 +365,7 @@ const Plumber = ({ navigation }) => {
       {/* for choosed service section */}
       <View style={styles.plumberStyle}>
         <Image
-          source={require("../../assets/logo/plmber.png")}
+          source={require("../../assets/logo/ac.png")}
           style={styles.imageStyle}
         />
         <Text
@@ -372,7 +377,7 @@ const Plumber = ({ navigation }) => {
             marginLeft: 15,
           }}
         >
-          Plumber
+          {services.name}
         </Text>
         <Image
           source={require("../../assets/logo/down.png")}
@@ -395,7 +400,7 @@ const Plumber = ({ navigation }) => {
 
       {/* for Details section */}
 
-      <View style={{ height: 190, marginTop: 10 }}>
+      <View style={{ height: 320, marginTop: 10 }}>
         {/* For name */}
         <ScrollView>
           <View style={styles.msgStyle}>
@@ -441,7 +446,22 @@ const Plumber = ({ navigation }) => {
               />
             </Picker>
           </View>
-          <View style={styles.msgStyle}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#fff",
+              height: 50,
+              marginTop: -15,
+              marginLeft: 22,
+              marginBottom: 10,
+              marginRight: 22,
+              borderRadius: 4,
+              borderWidth: 1,
+              borderColor: "#ddd",
+            }}
+          >
             <TextInput
               style={{
                 flex: 1,
@@ -472,10 +492,11 @@ const Plumber = ({ navigation }) => {
               placeholderTextColor="#737373"
               returnKeyLabel={"next"}
               onChangeText={(newText) => setAlternate(newText)}
-              defaultValue={alternate}
+              defaultValue={phoneNumber}
               keyboardType="number-pad"
               maxLength={10}
             />
+            <Icon name="pencil-outline" size={20} color={"black"} />
           </View>
           {/* House no */}
           <View style={styles.msgStyle}>
@@ -497,7 +518,7 @@ const Plumber = ({ navigation }) => {
           </View>
 
           {/* Locality  */}
-          <View style={styles.msgStyle}>
+          {/* <View style={styles.msgStyle}>
             <TextInput
               style={{
                 flex: 1,
@@ -513,17 +534,9 @@ const Plumber = ({ navigation }) => {
               onChangeText={(newText) => setLocality(newText)}
               defaultValue={local}
             />
-          </View>
+          </View> */}
           {/* City & pin code */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginLeft: 22,
-              marginRight: 22,
-            }}
-          >
+          <View style={{ marginLeft: 22 }}>
             <TextInput
               style={{
                 fontWeight: "600",
@@ -534,28 +547,7 @@ const Plumber = ({ navigation }) => {
                 borderColor: "#ddd",
                 backgroundColor: "#fff",
                 height: 56,
-                width: "48%",
-                padding: 20,
-                marginTop: 0,
-              }}
-              placeholder="City "
-              underlineColorAndroid="transparent"
-              placeholderTextColor="#737373"
-              returnKeyLabel={"next"}
-              onChangeText={(newText) => setCity(newText)}
-              defaultValue={cit}
-            />
-            <TextInput
-              style={{
-                fontWeight: "600",
-                fontSize: 15,
-                color: "black",
-                borderRadius: 2,
-                borderWidth: 1,
-                borderColor: "#ddd",
-                backgroundColor: "#fff",
-                height: 56,
-                width: "48%",
+                width: "94%",
                 padding: 20,
                 marginTop: 0,
               }}
@@ -571,7 +563,7 @@ const Plumber = ({ navigation }) => {
           </View>
 
           {/* State & Country */}
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               justifyContent: "space-around",
@@ -623,29 +615,41 @@ const Plumber = ({ navigation }) => {
               onChangeText={(newText) => setCountry(newText)}
               defaultValue={contry}
             />
-          </View>
+          </View> */}
         </ScrollView>
       </View>
 
       {/* for coupon */}
-      <View style={styles.couponStyle}>
-        <Image
-          source={require("../../assets/logo/tag.png")}
-          style={{ height: 30, width: 25, marginLeft: 10 }}
-        />
-        <TextInput
+      <View style={{ backgroundColor: "#f8f8f8" }}>
+        <Text
           style={{
-            flex: 0.87,
-            fontWeight: "700",
-            fontSize: 18,
-            color: "black",
-            marginLeft: 35,
+            fontSize: 16,
+            marginLeft: 15,
+            marginTop: 5,
+            fontWeight: "600",
           }}
-          placeholder="Offer Code"
-          underlineColorAndroid="transparent"
-          //placeholderTextColor=""
-        />
-        {/* <Text style={{ color: "#0066FF" }}>change</Text> */}
+        >
+          Offer Code
+        </Text>
+        <View style={styles.couponStyle}>
+          <Image
+            source={require("../../assets/logo/tag.png")}
+            style={{ height: 30, width: 25, marginLeft: 10 }}
+          />
+          <TextInput
+            style={{
+              flex: 0.87,
+              fontWeight: "700",
+              fontSize: 18,
+              color: "black",
+              marginLeft: 35,
+            }}
+            placeholder="Offer Code"
+            underlineColorAndroid="transparent"
+            //placeholderTextColor=""
+          />
+          {/* <Text style={{ color: "#0066FF" }}>change</Text> */}
+        </View>
       </View>
 
       {/* for amount */}
@@ -693,7 +697,7 @@ const Plumber = ({ navigation }) => {
           width: "95%",
           backgroundColor: "#00796A",
           height: 50,
-          marginTop: 60,
+          marginTop: 5,
           marginLeft: 10,
           borderRadius: 3,
         }}
@@ -763,6 +767,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     height: 50,
+    marginTop: 0,
     marginLeft: 22,
     marginBottom: 10,
     marginRight: 22,
@@ -777,7 +782,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     height: 56,
     margin: 22,
-    marginTop: 9,
+    marginTop: 0,
     borderRadius: 2,
     borderWidth: 1,
     borderColor: "#ddd",
@@ -799,7 +804,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     backgroundColor: "#fff",
     height: 130,
-    marginTop: 24,
+    marginTop: 20,
   },
   inStyle: {
     flexDirection: "row",
@@ -817,4 +822,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Plumber;
+export default Services;

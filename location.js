@@ -68,12 +68,14 @@ const Locations = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Image
+        {/* <Image
           source={require("./assets/logo/location.png")}
           style={styles.image}
-        />
+        /> */}
+
         <Text style={styles.title}>What's your address?</Text>
       </View>
+
       <Text style={styles.text}>{displayCurrentAddress}</Text>
     </View>
   );

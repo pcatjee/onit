@@ -19,6 +19,7 @@ import { BottomSheet } from "react-native-btr";
 const { width, height } = Dimensions.get("window");
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
+import LocationDetail from "../../utils/components/LocationDetail";
 
 const Electronics = ({ navigation }) => {
   const styleTypes = ["dark-content"];
@@ -340,15 +341,15 @@ const Electronics = ({ navigation }) => {
         </BottomSheet> */}
 
         <Text
-          style={{
-            flex: 0.5,
-            marginLeft: 16,
-            fontSize: 18,
-            fontWeight: "700",
-            color: "#00796A",
-          }}
+        // style={{
+        //   flex: 0.5,
+        //   marginLeft: 16,
+        //   fontSize: 18,
+        //   fontWeight: "700",
+        //   // color: "#00796A",
+        // }}
         >
-          Sector 104, Noida
+          <LocationDetail color={"#00796A"} />
         </Text>
         {/* <Image
           source={require("../../assets/logo/pen.png")}

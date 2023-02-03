@@ -86,7 +86,7 @@ export default function Login({ navigation, route }) {
         style={{ flex: 2, flexDirection: "column", backgroundColor: "#fff" }}
       >
         <ImageBackground
-          source={require("../../assets/image/login.jpg")}
+          source={require("../../assets/image/login.png")}
           style={{
             flex: 1,
             backgroundColor: "#fff",

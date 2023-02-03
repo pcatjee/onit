@@ -7,7 +7,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ height: 140, width: "100%", borderRadius: 10 }}>
-          <Swiper horizontal loop timeout={-2.5}>
+          <Swiper horizontal loop timeout={2.5}>
             <View
               style={{
                 alignItems: "center",

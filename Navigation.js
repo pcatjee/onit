@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { NativeScreenNavigationContainer } from "react-native-screens";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Signup, Login, Home, Services, Message } from "./src/screens";
+import { Signup, Login, Home, Message } from "./src/screens";
 import { NavigationContainer } from "@react-navigation/native";
 import { createRef } from "react";
 import "react-native-gesture-handler";
@@ -40,6 +40,7 @@ import Technician from "./utils/Message/Technician";
 import Otp from "./backend/otp";
 import SuccessFull from "./src/screens/successfull";
 import Locations from "./location";
+import Services from "./src/Services Screen/Services";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -48,8 +49,8 @@ const Navigation = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Locations" component={Locations} /> */}
         {/* <Stack.Screen name="Homem" component={Homem} /> */}
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Otp" component={Otp} />
+        {/* <Stack.Screen name="Login" component={Login} /> */}
+        {/* <Stack.Screen name="Otp" component={Otp} /> */}
         {/* <Stack.Screen name="Signup" component={Signup} /> */}
         <Stack.Screen name="Homem" component={Homem} />
         <Stack.Screen name="Wallet" component={Wallet} />
@@ -84,6 +85,7 @@ const Navigation = () => {
         <Stack.Screen name="Friends" component={Friends} />
         <Stack.Screen name="Technician" component={Technician} />
         <Stack.Screen name="SuccessFull" component={SuccessFull} />
+        <Stack.Screen name="Services" component={Services} />
       </Stack.Navigator>
     </NavigationContainer>
   );

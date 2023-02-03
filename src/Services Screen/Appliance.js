@@ -341,15 +341,15 @@ const Appliance = ({ navigation }) => {
         </BottomSheet> */}
 
         <Text
-          style={{
-            flex: 0.5,
-            marginLeft: 16,
-            fontSize: 18,
-            fontWeight: "700",
-            color: "#00796A",
-          }}
+        // style={{
+        //   flex: 0.5,
+        //   marginLeft: 16,
+        //   fontSize: 18,
+        //   fontWeight: "700",
+        //   // color: "#00796A",
+        // }}
         >
-          <LocationDetail />
+          <LocationDetail color={"#00796A"} />
         </Text>
         {/* <Image
           source={require("../../assets/logo/pen.png")}

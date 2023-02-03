@@ -21,11 +21,43 @@ import { BottomSheet } from "react-native-btr";
 import * as Location from "expo-location";
 import HomeScreen from "../../utils/components/slider";
 import displayCurrentAddress from "../../location";
+import LocationDetail from "../../utils/components/LocationDetail";
+import { useSelector } from "react-redux";
+import homeList from "../../const/homeList";
 
 const { height, width } = Dimensions.get("window");
 
+const [text, onChangeText] = useState("");
+const extraction = homeList.filter((curElem) => {
+  return curElem.name.toLowerCase().includes(text.toLowerCase());
+});
+const Card = ({ services }) => {
+  return (
+    <TouchableOpacity
+      style={
+        services.isTrending === true
+          ? styles.buttonTrendingService
+          : styles.button
+      }
+      onPress={() => {
+        navigation.navigate("Services", services);
+      }}
+    >
+      <Image
+        style={{
+          height: 45,
+          width: 45,
+        }}
+        source={services.img}
+      />
+      <Text style={{ marginTop: 5 }}>{services.name}</Text>
+    </TouchableOpacity>
+  );
+};
+
 const Homemain = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
+
   const toggleBottomNavigationView = () => {
     setVisible(!visible);
   };
@@ -91,6 +123,7 @@ const Homemain = ({ navigation }) => {
     }
   };
 
+  console.log(text);
   return (
     <View
       style={{
@@ -121,7 +154,7 @@ const Homemain = ({ navigation }) => {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "center",
+              justifyContent: "space-around",
               alignItems: "center",
               backgroundColor: "#00796A",
               height: 45,
@@ -131,8 +164,7 @@ const Homemain = ({ navigation }) => {
               borderRadius: 4,
             }}
           >
-            {/* <TouchableOpacity onPress={toggleBottomNavigationView}> */}
-            <TouchableOpacity>
+            {/* <TouchableOpacity onPress={toggleBottomNavigationView}>
               <Image
                 source={require("../../assets/logo/111.png")}
                 style={{
@@ -144,46 +176,12 @@ const Homemain = ({ navigation }) => {
                   alignItems: "center",
                 }}
               />
-            </TouchableOpacity>
-            <BottomSheet
-              visible={visible}
-              onBackButtonPress={toggleBottomNavigationView}
-              onBackdropPress={toggleBottomNavigationView}
-            >
-              <View
-                style={{
-                  backgroundColor: "#fff",
-                  width: "100%",
-                  height: 250,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    padding: 20,
-                    fontSize: 20,
-                  }}
-                >
-                  Share Using
-                </Text>
-              </View>
-            </BottomSheet>
+            </TouchableOpacity> */}
+            {/* //BottomSheet */}
 
-            <Text
-              style={{
-                flex: 1,
-                fontWeight: "700",
-                fontSize: 18,
-                color: "#fff",
-                marginLeft: 5,
-                margin: 6,
-              }}
-            >
-              {displayCurrentAddress}
-              {/* Sector XXX, Noida */}
-            </Text>
+            {/* {displayCurrentAddress} */}
+            <LocationDetail color={"#fff"} />
+            {/* Sector XXX, Noida */}
 
             <Image
               source={require("../../assets/logo/alert.png")}
@@ -224,11 +222,12 @@ const Homemain = ({ navigation }) => {
               }}
             />
             <TextInput
+              onChangeText={onChangeText}
               style={{
                 flex: 1,
                 fontWeight: "500",
                 fontSize: 15,
-                color: "white",
+                // color: "white",
                 marginLeft: 5,
                 letterSpacing: 0,
               }}
@@ -252,6 +251,7 @@ const Homemain = ({ navigation }) => {
         <View
           style={{
             // flex: 11,
+
             marginTop: 5,
             backgroundColor: "#fff",
             borderTopLeftRadius: 40,
@@ -356,7 +356,7 @@ const Homemain = ({ navigation }) => {
                     source={require("../../assets/logo/Service.png")}
                   />
                   <Text style={{ marginTop: 10, marginLeft: 0, height: 18 }}>
-                    Service Needs
+                    Home Needs
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -409,7 +409,8 @@ const Homemain = ({ navigation }) => {
             >
               {/* task Manager */}
               <TouchableOpacity
-                onPress={() => navigation.navigate("TaskManager")}
+                // onPress={() => navigation.navigate("TaskManager")}
+                onPress={() => {}}
               >
                 <View
                   style={{

@@ -19,6 +19,10 @@ import { BottomSheet } from "react-native-btr";
 const { width, height } = Dimensions.get("window");
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
+import LocationDetail from "../../utils/components/LocationDetail";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../../backend/slice";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const AcService = ({ navigation }) => {
   const styleTypes = ["dark-content"];
@@ -33,7 +37,7 @@ const AcService = ({ navigation }) => {
   const [cit, setCity] = useState();
   const [pincod, setPincode] = useState();
   const [stat, setStat] = useState();
-  const [contry, setCountry] = useState();
+  // const [contry, setCountry] = useState();
   const [naam, setName] = useState();
 
   const [selectedValue, setSelectedValue] = useState("");
@@ -47,16 +51,26 @@ const AcService = ({ navigation }) => {
   //8 console.log(selectedValue);
   //console.log(mobile_number);
 
+  const phoneNumber = useSelector((state) => state.auth.userInfo);
+  const city = useSelector((state) => state.auth.city);
+  const country = useSelector((state) => state.auth.country);
+  const district = useSelector((state) => state.auth.district);
+  const name = useSelector((state) => state.auth.name);
+  const region = useSelector((state) => state.auth.region);
+  const street = useSelector((state) => state.auth.street);
+  const streetNumber = useSelector((state) => state.auth.streetNumber);
+  const subRegion = useSelector((state) => state.auth.subRegion);
+
   const onsubmit = async () => {
     setVisible(true);
     let specific_requirement = text;
-    let mobile_number = alternate;
+    let mobile_number = phoneNumber;
     let house_number = houseno;
     let locality = local;
     let city = cit;
     let state = stat;
     let pincode = pincod;
-    let country = contry;
+    // let country = contry;
     let name = naam;
     let time_preference_type = selectedValue;
 
@@ -64,11 +78,11 @@ const AcService = ({ navigation }) => {
       personal_details: {
         primary_phone: {
           country_code: "+91",
-          mobile_number: alternate,
+          mobile_number: phoneNumber,
         },
         alternate_phone: {
           country_code: "+91",
-          mobile_number: alternate,
+          mobile_number: phoneNumber,
         },
         name: naam,
       },
@@ -76,9 +90,9 @@ const AcService = ({ navigation }) => {
       service_provided_for: "637b7a0e7c7cd9e139b39d1e",
       address_details: {
         house_number: houseno,
-        locality: local,
+        locality: district,
         city: city,
-        state: state,
+        state: region,
         pincode: pincode,
         country: country,
       },
@@ -340,15 +354,15 @@ const AcService = ({ navigation }) => {
         </BottomSheet> */}
 
         <Text
-          style={{
-            flex: 0.5,
-            marginLeft: 16,
-            fontSize: 18,
-            fontWeight: "700",
-            color: "#00796A",
-          }}
+        // style={{
+        //   flex: 0.5,
+        //   marginLeft: 16,
+        //   fontSize: 18,
+        //   fontWeight: "700",
+        //   // color: "#00796A",
+        // }}
         >
-          Sector 104, Noida
+          <LocationDetail color={"#00796A"} />
         </Text>
         {/* <Image
           source={require("../../assets/logo/pen.png")}
@@ -471,10 +485,11 @@ const AcService = ({ navigation }) => {
               placeholderTextColor="#737373"
               returnKeyLabel={"next"}
               onChangeText={(newText) => setAlternate(newText)}
-              defaultValue={alternate}
+              defaultValue={phoneNumber}
               keyboardType="number-pad"
               maxLength={10}
             />
+            <Icon name="pencil-outline" size={20} color={"black"} />
           </View>
           {/* House no */}
           <View style={styles.msgStyle}>
@@ -496,7 +511,7 @@ const AcService = ({ navigation }) => {
           </View>
 
           {/* Locality  */}
-          <View style={styles.msgStyle}>
+          {/* <View style={styles.msgStyle}>
             <TextInput
               style={{
                 flex: 1,
@@ -512,9 +527,9 @@ const AcService = ({ navigation }) => {
               onChangeText={(newText) => setLocality(newText)}
               defaultValue={local}
             />
-          </View>
+          </View> */}
           {/* City & pin code */}
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               justifyContent: "space-around",
@@ -567,10 +582,10 @@ const AcService = ({ navigation }) => {
               keyboardType="number-pad"
               maxLength={6}
             />
-          </View>
+          </View> */}
 
           {/* State & Country */}
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               justifyContent: "space-around",
@@ -622,29 +637,41 @@ const AcService = ({ navigation }) => {
               onChangeText={(newText) => setCountry(newText)}
               defaultValue={contry}
             />
-          </View>
+          </View> */}
         </ScrollView>
       </View>
 
       {/* for coupon */}
-      <View style={styles.couponStyle}>
-        <Image
-          source={require("../../assets/logo/tag.png")}
-          style={{ height: 30, width: 25, marginLeft: 10 }}
-        />
-        <TextInput
+      <View>
+        <Text
           style={{
-            flex: 0.87,
-            fontWeight: "700",
-            fontSize: 18,
-            color: "black",
-            marginLeft: 35,
+            fontSize: 16,
+            marginLeft: 15,
+            marginTop: 15,
+            fontWeight: "600",
           }}
-          placeholder="Offer Code"
-          underlineColorAndroid="transparent"
-          //placeholderTextColor=""
-        />
-        {/* <Text style={{ color: "#0066FF" }}>change</Text> */}
+        >
+          Offer Code
+        </Text>
+        <View style={styles.couponStyle}>
+          <Image
+            source={require("../../assets/logo/tag.png")}
+            style={{ height: 30, width: 25, marginLeft: 10 }}
+          />
+          <TextInput
+            style={{
+              flex: 0.87,
+              fontWeight: "700",
+              fontSize: 18,
+              color: "black",
+              marginLeft: 35,
+            }}
+            placeholder="Offer Code"
+            underlineColorAndroid="transparent"
+            //placeholderTextColor=""
+          />
+          {/* <Text style={{ color: "#0066FF" }}>change</Text> */}
+        </View>
       </View>
 
       {/* for amount */}
@@ -713,7 +740,7 @@ const AcService = ({ navigation }) => {
             color: "#fff",
           }}
         >
-          charge your Wallet
+          Confirm Booking
         </Text>
       </TouchableOpacity>
 
