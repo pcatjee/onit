@@ -1,117 +1,232 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
+  Modal,
   TextInput,
   TouchableOpacity,
   Keyboard,
   ScrollView,
+  Image,
 } from "react-native";
-import Task from "../../utils/components/appoint";
+import PlusIcon from "../../assets/image/plusIcon.png";
+import FolderIcon from "../../assets/image/folder.png";
+import DeleteFolder from "../../assets/image/delete.png";
+import Close from "../../assets/image/close.png";
 
-export default function App() {
-  const [task, setTask] = useState();
-  const [taskItems, setTaskItems] = useState([]);
+// import Navigation from "../../Navigation";
 
-  const handleAddTask = () => {
-    Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    setTask(null);
+let Documents = function (props) {
+  let folderArray = [
+    {
+      title: "Plumber",
+      numberOfContacts: "0",
+    },
+    {
+      title: "Painter",
+      numberOfContacts: "0",
+    },
+    {
+      title: "Technician",
+      numberOfContacts: "0",
+    },
+  ];
+  const [folder, setFolder] = React.useState(folderArray);
+  const [folderName, setFolderName] = React.useState("");
+  const [modal, setModal] = React.useState(false);
+
+  const createFolder = function (title) {
+    let clone = [...folder];
+    let data = {
+      title,
+      numberOfContacts: "0",
+    };
+    clone.push(data);
+    setFolderName(data);
+    setFolder(clone);
+    setModal(modal ? false : true);
+  };
+  const deleteFolder = function (key) {
+    debugger;
+    let cloneArray = [...folder];
+    cloneArray.splice(key, 1);
+    setFolder(cloneArray);
   };
 
-  const completeTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
+  const openModal = function () {
+    setModal(modal ? false : true);
   };
-
+  const moveToContactDetail = function () {
+    props.navigation.navigate("ServiceNeeds");
+  };
   return (
     <View style={styles.container}>
-      {/* Added this scroll view to enable scrolling when list gets longer than the page */}
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-        keyboardShouldPersistTaps="handled"
-      >
-        {/* Today's Tasks */}
-        <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>Documents</Text>
-          <View style={styles.items}>
-            {/* This is where the tasks will go! */}
-            {taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => completeTask(index)}
-                >
-                  <Task text={item} />
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-      </ScrollView>
+      <Text style={styles.screenHeader}>All Documents</Text>
+      {folder.map((val, key) => {
+        return (
+          <TouchableOpacity
+            key={key}
+            onPress={() => props.navigation.navigate("ServiceNeeds")}
+          >
+            <View style={styles.folderBox}>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Image style={styles.icon} source={FolderIcon} />
+                <Text style={styles.folderText}>{val.title}</Text>
+              </View>
 
-      {/* Write a task */}
-      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder={"Write a task"}
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
-        <TouchableOpacity onPress={() => handleAddTask()}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{
+                    width: 30,
+                    height: 30,
+                    padding: 6,
+                    margin: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 4,
+                    backgroundColor: "#00796A",
+                  }}
+                  onPress={() => deleteFolder(key)}
+                >
+                  <Image
+                    style={{ width: 15, height: 20 }}
+                    source={DeleteFolder}
+                  />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: 20,
+                    height: 30,
+                    padding: 4,
+                    margin: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 4,
+                    backgroundColor: "#00796A",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    {">"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        );
+      })}
+
+      {!modal ? (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.writeTaskWrapper}
+        >
+          <TouchableOpacity onPress={() => setModal(modal ? false : true)}>
+            <View style={styles.addWrapper}>
+              <Image style={styles.icon} source={PlusIcon} />
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      ) : (
+        <Modal animationType="slide" transparent={true} visible={modal}>
+          <View style={styles.modalContainer}>
+            <View>
+              <View style={styles.modalHeaderSection}>
+                <View style={styles.modalHeaderSectionTop}>
+                  <Image style={styles.icon} source={FolderIcon} />
+                  <Text style={styles.modalHeaderText}>
+                    Create New Phonebook
+                  </Text>
+                </View>
+
+                <TouchableOpacity onPress={() => setModal(false)}>
+                  <Image style={styles.icon} source={Close} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => setFolderName(text)}
+                value={folderName}
+                placeholder="Folder Name"
+              />
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => createFolder(folderName)}
+                style={styles.button}
+              >
+                <Text>Submit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        </Modal>
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
+  screenHeader: {
+    fontSize: 23,
+    fontWeight: "bold",
+    padding: 4,
+    margin: 10,
+  },
+  folderText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    padding: 4,
+    margin: 10,
+  },
+  folderBox: {
+    backgroundColor: "white",
+    padding: 4,
+    paddingHorizontal: 4,
+    borderWidth: 1,
+    borderColor: "#f4f4f4",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  showConnectBox: {},
+
+  icon: {
+    width: 25,
+    height: 25,
+  },
+
   container: {
     flex: 1,
     backgroundColor: "#E8EAED",
   },
-  tasksWrapper: {
-    paddingTop: 20,
-    paddingHorizontal: 0,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginLeft: 15,
-  },
-  items: {
-    marginTop: 20,
-    height: 70,
-  },
+
   writeTaskWrapper: {
+    right: 25,
     position: "absolute",
     bottom: 60,
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-around",
     alignItems: "center",
   },
-  input: {
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#FFF",
-    borderRadius: 60,
-    borderColor: "#C0C0C0",
-    borderWidth: 1,
-    width: 250,
-  },
+  // modalStyle: {
+  //   backgroundColor: "black",
+  //   borderWidth: 1,
+  //   borderColor: "red",
+  // },
   addWrapper: {
     width: 60,
     height: 60,
@@ -122,8 +237,55 @@ const styles = StyleSheet.create({
     borderColor: "#C0C0C0",
     borderWidth: 1,
   },
-  addText: {
-    color: "#fff",
-    fontSize: 30,
+  modalContainer: {
+    height: "30%",
+    width: "100%",
+    backgroundColor: "white",
+    // alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+  },
+  modalUpperSection: {
+    display: "flex",
+    backgroundColor: "green",
+  },
+
+  modalHeaderSection: {
+    padding: 2,
+    marginTop: 20,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  modalHeaderSectionTop: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeIcon: {
+    margin: 10,
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+  modalHeaderText: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  input: {
+    // width:"100%",
+    padding: 4,
+    backgroundColor: "#ebf4f3",
+  },
+  button: {
+    margin: 4,
+    width: "80%",
+    padding: 6,
+    borderRadius: 4,
+    backgroundColor: "#00796A",
   },
 });
+
+export default Documents;

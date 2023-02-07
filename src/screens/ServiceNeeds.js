@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { IonFs } from "@expo/vector-icons";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import HomeScreen from "../../utils/components/slider";
@@ -64,7 +64,12 @@ const ServiceNeeds = ({ navigation }) => {
       />
 
       <View
-        style={{ flex: 2, flexDirection: "column", backgroundColor: "#00796A" }}
+        style={{
+          // flex: 2,
+          height: 110,
+          flexDirection: "column",
+          backgroundColor: "#00796A",
+        }}
       >
         {/* for location box   */}
 
@@ -221,6 +226,7 @@ const ServiceNeeds = ({ navigation }) => {
           renderItem={({ item }) => {
             return <Card services={item} />;
           }}
+          keyExtractor={(item) => item.id}
         />
 
         {/* ======================== */}
@@ -437,10 +443,10 @@ const styles = StyleSheet.create({
     padding: 0,
     height: 102,
     width: 102,
-    margin: 10,
-    marginBottom: 15,
+    margin: 5,
+    marginBottom: 3,
     borderWidth: 1.2,
-    // borderColor: "#FFBB00",
+    borderColor: "#ddd",
   },
   buttonTrendingService: {
     justifyContent: "center",
@@ -450,8 +456,8 @@ const styles = StyleSheet.create({
     padding: 0,
     height: 102,
     width: 102,
-    margin: 10,
-    marginBottom: 15,
+    margin: 5,
+    marginBottom: 3,
     borderWidth: 1.2,
     borderColor: "#FFBB00",
   },
