@@ -41,18 +41,21 @@ import Otp from "./backend/otp";
 import SuccessFull from "./src/screens/successfull";
 import Locations from "./location";
 import Services from "./src/Services Screen/Services";
+import MyBookings from "./src/screens/MyBookings";
+import TechnicianContacts from "./src/TabsScreen/TechnicianContacts";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
   return (
     <NavigationContainer ref={createRef()}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="Locations" component={Locations} /> */}
-        {/* <Stack.Screen name="Homem" component={Homem} /> */}
         {/* <Stack.Screen name="Login" component={Login} /> */}
         {/* <Stack.Screen name="Otp" component={Otp} /> */}
         {/* <Stack.Screen name="Signup" component={Signup} /> */}
+
         <Stack.Screen name="Homem" component={Homem} />
+        <Stack.Screen name="MyBookings" component={MyBookings} />
+
         <Stack.Screen name="Wallet" component={Wallet} />
         <Stack.Screen name="Newtask" component={Newtask} />
         <Stack.Screen name="MyAccount" component={MyAccount} />
@@ -86,6 +89,10 @@ const Navigation = () => {
         <Stack.Screen name="Technician" component={Technician} />
         <Stack.Screen name="SuccessFull" component={SuccessFull} />
         <Stack.Screen name="Services" component={Services} />
+        <Stack.Screen
+          name="TechnicianContacts"
+          component={TechnicianContacts}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

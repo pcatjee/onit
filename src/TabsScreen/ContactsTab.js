@@ -1,132 +1,274 @@
 import React from "react";
 import {
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
+  Modal,
   TextInput,
-  SafeAreaView,
-  FlatList,
-  ActivityIndicator,
+  TouchableOpacity,
+  Keyboard,
+  ScrollView,
+  Image,
 } from "react-native";
-//import { Contacts } from "expo";
-import Contacts from "react-native-contacts";
-//import contacts from
-export default class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      isLoading: false,
-      contacts: [],
+import PlusIcon from "../../assets/image/plusIcon.png";
+import FolderIcon from "../../assets/image/folder.png";
+import DeleteFolder from "../../assets/image/delete.png";
+import Close from "../../assets/image/close.png";
+import { useNavigation } from "@react-navigation/native";
+
+let ContactsTab = function ({ props }) {
+  let folderArray = [
+    {
+      title: "Plumber",
+      numberOfContacts: "0",
+    },
+    {
+      title: "Painter",
+      numberOfContacts: "0",
+    },
+    {
+      title: "Technician",
+      numberOfContacts: "0",
+    },
+  ];
+  const [folder, setFolder] = React.useState(folderArray);
+  const [folderName, setFolderName] = React.useState("");
+  const [modal, setModal] = React.useState(false);
+  const navigation = useNavigation();
+
+  const createFolder = function (title) {
+    let clone = [...folder];
+    let data = {
+      title,
+      numberOfContacts: "0",
     };
-  }
-
-  loadContacts = async () => {
-    const permission = await Expo.Permissions.askAsync(
-      Expo.Permissions.CONTACTS
-    );
-
-    if (permission.status !== "granted") {
-      return;
-    }
-
-    const { data } = await Contacts.getContactsAsync({
-      fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails],
-    });
-
-    console.log(data);
-    this.setState({ contacts: data, inMemoryContacts: data, isLoading: false });
+    clone.push(data);
+    setFolderName(data);
+    setFolder(clone);
+    setModal(modal ? false : true);
+  };
+  const deleteFolder = function (key) {
+    let cloneArray = [...folder];
+    cloneArray.splice(key, 1);
+    setFolder(cloneArray);
   };
 
-  componentDidMount() {
-    this.setState({ isLoading: true });
-    this.loadContacts();
-  }
+  const openModal = function () {
+    setModal(modal ? false : true);
+  };
+  const moveToContactDetail = function () {
+    props.navigation.navigate("ServiceNeeds");
+  };
+  return (
+    <View style={styles.container}>
+      <Text style={styles.screenHeader}>All Contacts</Text>
+      {folder.map((val, key) => {
+        return (
+          <TouchableOpacity
+            key={key}
+            // onPress={() => props.navigation.navigate("TechnicianContacts")}
+            onPress={() => navigation.navigate("TechnicianContacts")}
+          >
+            <View style={styles.folderBox}>
+              <Text style={styles.folderText}>{val.title}</Text>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
+                    padding: 4,
+                    margin: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 4,
+                    backgroundColor: "#00796A",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <Text style={{ color: "white" }}>{val.numberOfContacts}</Text>
+                </View>
+                <TouchableOpacity
+                  style={{
+                    width: 30,
+                    height: 30,
+                    padding: 6,
+                    margin: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 4,
+                    backgroundColor: "#00796A",
+                  }}
+                  onPress={() => deleteFolder(key)}
+                >
+                  <Image
+                    style={{ width: 15, height: 20 }}
+                    source={DeleteFolder}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        );
+      })}
 
-  renderItem = ({ item }) => (
-    <View style={{ minHeight: 70, padding: 5 }}>
-      <Text style={{ color: "#bada55", fontWeight: "bold", fontSize: 26 }}>
-        {item.firstName + " "}
-        {item.lastName}
-      </Text>
-      <Text style={{ color: "white", fontWeight: "bold" }}>
-        {item.phoneNumbers[0].digits}
-      </Text>
+      {!modal ? (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.writeTaskWrapper}
+        >
+          <TouchableOpacity onPress={() => setModal(modal ? false : true)}>
+            <View style={styles.addWrapper}>
+              <Image style={styles.icon} source={PlusIcon} />
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      ) : (
+        <Modal animationType="slide" transparent={true} visible={modal}>
+          <View style={styles.modalContainer}>
+            <View>
+              <View style={styles.modalHeaderSection}>
+                <View style={styles.modalHeaderSectionTop}>
+                  <Image style={styles.icon} source={FolderIcon} />
+                  <Text style={styles.modalHeaderText}>
+                    Create New Phonebook
+                  </Text>
+                </View>
+
+                <TouchableOpacity onPress={() => setModal(false)}>
+                  <Image style={styles.icon} source={Close} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => setFolderName(text)}
+                value={folderName}
+                placeholder="Folder Name"
+              />
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => createFolder(folderName)}
+                style={styles.button}
+              >
+                <Text>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
-
-  searchContacts = (value) => {
-    const filteredContacts = this.state.inMemoryContacts.filter((contact) => {
-      let contactLowercase = (
-        contact.firstName +
-        " " +
-        contact.lastName
-      ).toLowerCase();
-
-      let searchTermLowercase = value.toLowerCase();
-
-      return contactLowercase.indexOf(searchTermLowercase) > -1;
-    });
-    this.setState({ contacts: filteredContacts });
-  };
-
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <SafeAreaView style={{ backgroundColor: "#fff" }} />
-        <TextInput
-          placeholder="Search"
-          placeholderTextColor="#dddddd"
-          style={{
-            backgroundColor: "#2f363c",
-            height: 50,
-            fontSize: 36,
-            padding: 10,
-            color: "white",
-            borderBottomWidth: 0.5,
-            borderBottomColor: "#7d90a0",
-          }}
-          onChangeText={(value) => this.searchContacts(value)}
-        />
-        <View style={{ flex: 1, backgroundColor: "#2f363c" }}>
-          {this.state.isLoading ? (
-            <View
-              style={{
-                ...StyleSheet.absoluteFill,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator size="large" color="#bad555" />
-            </View>
-          ) : null}
-          <FlatList
-            data={this.state.contacts}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={() => (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: 50,
-                }}
-              >
-                <Text style={{ color: "#bad555" }}>No Contacts Found</Text>
-              </View>
-            )}
-          />
-        </View>
-      </View>
-    );
-  }
-}
+};
 
 const styles = StyleSheet.create({
+  screenHeader: {
+    fontSize: 23,
+    fontWeight: "bold",
+    padding: 4,
+    margin: 10,
+  },
+  folderText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    padding: 4,
+    margin: 10,
+  },
+  folderBox: {
+    backgroundColor: "white",
+    padding: 4,
+    paddingHorizontal: 4,
+    borderWidth: 1,
+    borderColor: "#f4f4f4",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  showConnectBox: {},
+
+  icon: {
+    marginHorizontal: 10,
+    width: 25,
+    height: 25,
+  },
+
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#E8EAED",
+  },
+
+  writeTaskWrapper: {
+    right: 25,
+    position: "absolute",
+    bottom: 60,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  addWrapper: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#00796A",
+    borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#C0C0C0",
+    borderWidth: 1,
+  },
+  modalContainer: {
+    height: "30%",
+    width: "100%",
+    backgroundColor: "white",
+    // alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+  },
+  modalUpperSection: {
+    display: "flex",
+    backgroundColor: "green",
+  },
+
+  modalHeaderSection: {
+    padding: 2,
+    marginTop: 20,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  modalHeaderSectionTop: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: 50,
     alignItems: "center",
     justifyContent: "center",
   },
+  closeIcon: {
+    margin: 10,
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+  modalHeaderText: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  input: {
+    // width:"100%",
+    padding: 4,
+    backgroundColor: "#ebf4f3",
+  },
+  button: {
+    margin: 4,
+    width: "80%",
+    padding: 6,
+    borderRadius: 4,
+    backgroundColor: "#00796A",
+  },
 });
+
+export default ContactsTab;

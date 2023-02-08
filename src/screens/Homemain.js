@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  FlatList,
 } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import "react-native";
@@ -27,39 +28,56 @@ import homeList from "../../const/homeList";
 
 const { height, width } = Dimensions.get("window");
 
-const [text, onChangeText] = useState("");
-const extraction = homeList.filter((curElem) => {
-  return curElem.name.toLowerCase().includes(text.toLowerCase());
-});
-const Card = ({ services }) => {
-  return (
-    <TouchableOpacity
-      style={
-        services.isTrending === true
-          ? styles.buttonTrendingService
-          : styles.button
-      }
-      onPress={() => {
-        navigation.navigate("Services", services);
-      }}
-    >
-      <Image
-        style={{
-          height: 45,
-          width: 45,
-        }}
-        source={services.img}
-      />
-      <Text style={{ marginTop: 5 }}>{services.name}</Text>
-    </TouchableOpacity>
-  );
-};
-
 const Homemain = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
+  const [text, onChangeText] = useState("");
 
-  const toggleBottomNavigationView = () => {
-    setVisible(!visible);
+  const extraction = homeList.filter((curElem) => {
+    return curElem.name.toLowerCase().includes(text.toLowerCase());
+  });
+
+  const Card = ({ homeListing }) => {
+    return (
+      <TouchableOpacity
+        // style={
+        //   homeListing.isDefault === true ? styles.buttonDefault : styles.button
+        // }
+        onPress={() => {
+          navigation.navigate(homeListing.screen);
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "#F8F8F8",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 100,
+            width: 150,
+            marginTop: 5,
+            marginLeft: 20,
+            marginRight: 10,
+            marginBottom: 5,
+            borderRadius: 20,
+            borderWidth: 1.2,
+            borderColor: homeListing.isDefault ? "#FFBB00" : "#ddd",
+          }}
+        >
+          <Image
+            style={{
+              marginTop: 1,
+              marginLeft: 0,
+              height: 40,
+              width: 40,
+            }}
+            source={homeListing.img}
+          />
+          <Text style={{ marginTop: 10, marginLeft: 0, height: 18 }}>
+            {homeListing.name}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
@@ -123,7 +141,6 @@ const Homemain = ({ navigation }) => {
     }
   };
 
-  console.log(text);
   return (
     <View
       style={{
@@ -133,443 +150,177 @@ const Homemain = ({ navigation }) => {
         width: width,
       }}
     >
-      <ScrollView>
-        <StatusBar
-          barStyle="light-content"
-          hidden={false}
-          backgroundColor="#00796A"
-        />
+      {/* <ScrollView> */}
+      <StatusBar
+        barStyle="light-content"
+        hidden={false}
+        backgroundColor="#00796A"
+      />
+
+      <View
+        style={{
+          //flex: 2,
+          height: 110,
+          width: width,
+          flexDirection: "column",
+          backgroundColor: "#00796A",
+        }}
+      >
+        {/* for location box   */}
 
         <View
           style={{
-            //flex: 2,
-            height: 110,
-            width: width,
-            flexDirection: "column",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
             backgroundColor: "#00796A",
+            height: 45,
+            marginTop: 2,
+            marginLeft: 14,
+            width: "93%",
+            borderRadius: 4,
           }}
         >
-          {/* for location box   */}
+          {/* {displayCurrentAddress} */}
+          <LocationDetail color={"#fff"} />
+          {/* Sector XXX, Noida */}
 
-          <View
+          <Image
+            source={require("../../assets/logo/alert.png")}
             style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
+              padding: 10,
+              margin: 5,
+              height: 25,
+              width: 25,
+              resizeMode: "stretch",
               alignItems: "center",
-              backgroundColor: "#00796A",
-              height: 45,
-              marginTop: 2,
-              marginLeft: 14,
-              width: "93%",
-              borderRadius: 4,
             }}
-          >
-            {/* <TouchableOpacity onPress={toggleBottomNavigationView}>
-              <Image
-                source={require("../../assets/logo/111.png")}
-                style={{
-                  padding: 10,
-                  margin: 5,
-                  height: 25,
-                  width: 25,
-                  resizeMode: "stretch",
-                  alignItems: "center",
-                }}
-              />
-            </TouchableOpacity> */}
-            {/* //BottomSheet */}
-
-            {/* {displayCurrentAddress} */}
-            <LocationDetail color={"#fff"} />
-            {/* Sector XXX, Noida */}
-
-            <Image
-              source={require("../../assets/logo/alert.png")}
-              style={{
-                padding: 10,
-                margin: 5,
-                height: 25,
-                width: 25,
-                resizeMode: "stretch",
-                alignItems: "center",
-              }}
-            />
-          </View>
-
-          {/* for search box        */}
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#fff",
-              height: 45,
-              marginTop: 10,
-              marginLeft: 14,
-              width: "93%",
-              borderRadius: 4,
-            }}
-          >
-            <Image
-              source={require("../../assets/logo/search.png")}
-              style={{
-                margin: 10,
-                height: 20,
-                width: 20,
-                resizeMode: "stretch",
-                alignItems: "center",
-              }}
-            />
-            <TextInput
-              onChangeText={onChangeText}
-              style={{
-                flex: 1,
-                fontWeight: "500",
-                fontSize: 15,
-                // color: "white",
-                marginLeft: 5,
-                letterSpacing: 0,
-              }}
-              placeholder="Search ..."
-              underlineColorAndroid="transparent"
-            />
-            <Image
-              source={require("../../assets/logo/mic.png")}
-              style={{
-                padding: 10,
-                height: 16,
-                width: 16,
-                marginRight: 10,
-                resizeMode: "stretch",
-                alignItems: "center",
-              }}
-            />
-          </View>
+          />
         </View>
+
+        {/* for search box        */}
 
         <View
           style={{
-            // flex: 11,
-
-            marginTop: 5,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
             backgroundColor: "#fff",
-            borderTopLeftRadius: 40,
-            borderTopRightRadius: 40,
-            shadowColor: "#00000014",
-            shadowRadius: 20,
-            height: height,
-            width: width,
+            height: 45,
+            marginTop: 10,
+            marginLeft: 14,
+            width: "93%",
+            borderRadius: 4,
           }}
         >
-          {/* for recommended services */}
-          <Text
+          <Image
+            source={require("../../assets/logo/search.png")}
             style={{
-              justifyContent: "center",
-              fontSize: 17,
-              fontWeight: "700",
-              marginLeft: 16,
-              marginTop: 12,
-            }}
-          >
-            Recommended Services:
-          </Text>
-
-          {/* for img swiper  */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              backgroundColor: "#fff",
-              width: "93%",
-              height: 130.5,
-              marginLeft: 16,
-              marginTop: 15,
-              borderRadius: 5,
-              position: "relative",
-            }}
-          >
-            <HomeScreen />
-          </View>
-
-          <Text
-            style={{
-              justifyContent: "center",
-              fontSize: 19,
-              fontWeight: "600",
-              marginLeft: 16,
-              marginTop: 20,
-              marginBottom: 0,
-              color: "#3A3A3A",
-            }}
-          >
-            Services:
-          </Text>
-          {/* services */}
-          <View
-            style={{
-              marginTop: 10,
-              // backgroundColor: "#ddd",
-              width: width,
-              justifyContent: "center",
+              margin: 10,
+              height: 20,
+              width: 20,
+              resizeMode: "stretch",
               alignItems: "center",
             }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
-                // height: 110,
-                backgroundColor: "#fff",
-                marginTop: 10,
-              }}
-            >
-              {/* Service Needs */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate("ServiceNeeds")}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#F8F8F8",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 100,
-                    width: 150,
-                    marginTop: 5,
-                    marginLeft: 20,
-                    marginRight: 10,
-                    marginBottom: 5,
-                    borderRadius: 20,
-                    borderWidth: 1.2,
-                    borderColor: "#FFBB00",
-                  }}
-                >
-                  <Image
-                    style={{
-                      marginTop: 1,
-                      marginLeft: 0,
-                      height: 40,
-                      width: 40,
-                    }}
-                    source={require("../../assets/logo/Service.png")}
-                  />
-                  <Text style={{ marginTop: 10, marginLeft: 0, height: 18 }}>
-                    Home Needs
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              {/* Money Manager */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate("MoneyManager")}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#F8F8F8",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 100,
-                    width: 150,
-                    marginTop: 5,
-                    marginLeft: 10,
-                    marginRight: 20,
-                    marginBottom: 5,
-                    borderRadius: 20,
-                    borderWidth: 1.2,
-                    borderColor: "#ddd",
-                  }}
-                >
-                  <Image
-                    style={{
-                      marginTop: 1,
-                      marginLeft: 0,
-                      height: 40,
-                      width: 40,
-                    }}
-                    source={require("../../assets/logo/Money.png")}
-                  />
-                  <Text style={{ marginTop: 12, marginLeft: 0, height: 18 }}>
-                    Money Manager
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
-                height: 110,
-                backgroundColor: "#fff",
-                marginTop: 10,
-              }}
-            >
-              {/* task Manager */}
-              <TouchableOpacity
-                // onPress={() => navigation.navigate("TaskManager")}
-                onPress={() => {}}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#F8F8F8",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 100,
-                    width: 150,
-                    marginTop: 5,
-                    marginLeft: 20,
-                    marginRight: 10,
-                    marginBottom: 5,
-                    borderRadius: 20,
-                    borderWidth: 1.2,
-                    borderColor: "#ddd",
-                  }}
-                >
-                  <Image
-                    style={{
-                      marginTop: 0,
-                      marginLeft: 0,
-                      height: 40,
-                      width: 40,
-                    }}
-                    source={require("../../assets/logo/Task.png")}
-                  />
-                  <Text style={{ marginTop: 12, marginLeft: 0, height: 18 }}>
-                    Task Manager
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              {/* contacts */}
-
-              <TouchableOpacity onPress={() => navigation.navigate("Contacts")}>
-                <View
-                  style={{
-                    backgroundColor: "#F8F8F8",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 100,
-                    width: 150,
-                    marginTop: 5,
-                    marginLeft: 10,
-                    marginRight: 20,
-                    marginBottom: 5,
-                    borderRadius: 20,
-                    borderWidth: 1.2,
-                    borderColor: "#ddd",
-                  }}
-                >
-                  <Image
-                    style={{
-                      marginTop: 1,
-                      marginLeft: 0,
-                      height: 40,
-                      width: 40,
-                    }}
-                    source={require("../../assets/logo/Contact.png")}
-                  />
-                  <Text
-                    style={{
-                      marginTop: 1,
-                      fontSize: 11,
-                      marginLeft: 2,
-                      justifyContent: "center",
-                    }}
-                  >
-                    Contacts &{"\n"}Documents
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: "row",
-                justifyContent: "space-around",
-                height: 110,
-                backgroundColor: "#fff",
-              }}
-            >
-              {/* personal care */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate("PersonalCare")}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#F8F8F8",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 100,
-                    width: 150,
-                    marginTop: 5,
-                    marginLeft: 20,
-                    marginRight: 10,
-                    marginBottom: 5,
-                    borderRadius: 20,
-                    borderWidth: 1.2,
-                    borderColor: "#ddd",
-                  }}
-                >
-                  <Image
-                    style={{
-                      marginTop: 1,
-                      marginLeft: 0,
-                      height: 40,
-                      width: 40,
-                    }}
-                    source={require("../../assets/logo/Pesonal.png")}
-                  />
-                  <Text style={{ marginTop: 12, marginLeft: 0, height: 18 }}>
-                    Personal Care
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              {/* Reminders */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Reminders")}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#F8F8F8",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 100,
-                    width: 150,
-                    marginTop: 5,
-                    marginLeft: 10,
-                    marginRight: 20,
-                    marginBottom: 5,
-                    borderRadius: 20,
-                    borderWidth: 1.2,
-                    borderColor: "#ddd",
-                  }}
-                >
-                  <Image
-                    style={{
-                      marginTop: 1,
-                      marginLeft: 0,
-                      height: 40,
-                      width: 40,
-                    }}
-                    source={require("../../assets/logo/Reminder.png")}
-                  />
-                  <Text style={{ marginTop: 12, marginLeft: 0, height: 18 }}>
-                    Reminders
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
+          />
+          <TextInput
+            onChangeText={onChangeText}
+            style={{
+              flex: 1,
+              fontWeight: "500",
+              fontSize: 15,
+              // color: "white",
+              marginLeft: 5,
+              letterSpacing: 0,
+            }}
+            placeholder="Search ..."
+            underlineColorAndroid="transparent"
+          />
+          <Image
+            source={require("../../assets/logo/mic.png")}
+            style={{
+              padding: 10,
+              height: 16,
+              width: 16,
+              marginRight: 10,
+              resizeMode: "stretch",
+              alignItems: "center",
+            }}
+          />
         </View>
-      </ScrollView>
+      </View>
+
+      <View
+        style={{
+          // flex: 11,
+
+          marginTop: 5,
+          backgroundColor: "#fff",
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+          shadowColor: "#00000014",
+          shadowRadius: 20,
+          height: height,
+          width: width,
+        }}
+      >
+        {/* for recommended services */}
+        <Text
+          style={{
+            justifyContent: "center",
+            fontSize: 17,
+            fontWeight: "700",
+            marginLeft: 16,
+            marginTop: 12,
+          }}
+        >
+          Recommended Services:
+        </Text>
+
+        {/* for img swiper  */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            backgroundColor: "#fff",
+            width: "93%",
+            height: 130.5,
+            marginLeft: 16,
+            marginTop: 15,
+            borderRadius: 5,
+            position: "relative",
+          }}
+        >
+          <HomeScreen />
+        </View>
+
+        <Text
+          style={{
+            justifyContent: "center",
+            fontSize: 19,
+            fontWeight: "600",
+            marginLeft: 16,
+            marginTop: 20,
+            marginBottom: 0,
+            color: "#3A3A3A",
+          }}
+        >
+          Services:
+        </Text>
+        {/* services Below*/}
+
+        <FlatList
+          columnWrapperStyle={{ justifyContent: "center" }}
+          numColumns={2}
+          data={extraction}
+          renderItem={({ item }) => {
+            return <Card homeListing={item} />;
+          }}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+      {/* </ScrollView> */}
     </View>
   );
 };

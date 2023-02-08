@@ -16,8 +16,6 @@ import FolderIcon from "../../assets/image/folder.png";
 import DeleteFolder from "../../assets/image/delete.png";
 import Close from "../../assets/image/close.png";
 
-// import Navigation from "../../Navigation";
-
 let Documents = function (props) {
   let folderArray = [
     {

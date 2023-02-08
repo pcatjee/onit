@@ -10,15 +10,48 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Linking,
 } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import "react-native";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import RazorpayCheckout from "react-native-razorpay";
 
 const { height, width } = Dimensions.get("window");
 
-const SuccessFull = ({ navigation }) => {
+const SuccessFull = ({ navigation, route }) => {
+  const services = route.params;
+  const [isPayment, setIsPayment] = useState(false);
+  const [paymentAttempted, setPaymentAttempted] = useState(false);
+  //razorpay
+  const makePayment = () => {
+    var options = {
+      description: "Credits towards consultation",
+      image: "https://i.imgur.com/3g7nmJC.png",
+      currency: "INR",
+      key: "n8ke6EPUy1Jf7ZAHRuusDZEm", // Your api key
+      amount: "5000",
+      name: "foo",
+      prefill: {
+        email: "void@razorpay.com",
+        contact: "9191919191",
+        name: "Razorpay Software",
+      },
+      theme: { color: "#F37254" },
+    };
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        alert(`Success: ${data.razorpay_payment_id}`);
+      })
+      .catch((error) => {
+        // handle failure
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
+  };
+  // razor pay code end
+
   return (
     <View
       style={{
@@ -37,6 +70,22 @@ const SuccessFull = ({ navigation }) => {
           backgroundColor: "#DBEAE8",
         }}
       >
+        {paymentAttempted && (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            {isPayment ? (
+              <Image
+                source={require("../../assets/image/paySuccess.gif")}
+                style={{ width: 100, height: 100 }}
+              />
+            ) : (
+              <Image
+                source={require("../../assets/image/payFail.gif")}
+                style={{ width: 100, height: 100 }}
+              />
+            )}
+          </View>
+        )}
+
         <Text
           style={{
             marginLeft: 60,
@@ -47,7 +96,7 @@ const SuccessFull = ({ navigation }) => {
           }}
         >
           Your booking request is in progress.{"\n"}A verfied technician will be
-          assigned {"\n"}to you seen.
+          assigned {"\n"}to you soon.
         </Text>
       </View>
       <Text
@@ -57,7 +106,7 @@ const SuccessFull = ({ navigation }) => {
           fontWeight: "600",
         }}
       >
-        Booking Request:
+        {isPayment ? "Request Booked:" : "Request Failed"}
       </Text>
 
       {/* For booked ticket */}
@@ -96,7 +145,7 @@ const SuccessFull = ({ navigation }) => {
               marginLeft: 20,
             }}
           >
-            Plumber Service
+            {services.name}
           </Text>
         </View>
         <Text
@@ -108,20 +157,20 @@ const SuccessFull = ({ navigation }) => {
         <View>
           <View
             style={{
-              //justifyContent: "flex-end",
-              alignItems: "flex-end",
-              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
               marginLeft: 30,
               marginTop: 10,
               marginRight: 20,
             }}
           >
-            <TouchableOpacity>
+            {paymentAttempted && (
               <View
                 style={{
                   height: 30,
                   width: 80,
-                  backgroundColor: "#00796A",
+                  backgroundColor: isPayment ? "green" : "red",
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 5,
@@ -134,39 +183,65 @@ const SuccessFull = ({ navigation }) => {
                     fontWeight: "600",
                   }}
                 >
-                  View Details
+                  {isPayment ? "Payment Accepted" : "Payment Failed"}
                 </Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View
-                style={{
-                  height: 30,
-                  width: 80,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "#0066FF",
-                  marginTop: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Text
+            )}
+            {isPayment ? (
+              <TouchableOpacity>
+                <View
                   style={{
-                    color: "#fff",
-                    fontSize: 12,
-                    fontWeight: "600",
+                    height: 30,
+                    width: 80,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#0066FF",
+                    marginTop: 10,
+                    borderRadius: 5,
                   }}
                 >
-                  Re-Schedule
-                </Text>
-              </View>
-            </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 12,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Re-Schedule
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={makePayment}>
+                <View
+                  style={{
+                    height: 30,
+                    width: 80,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "red",
+                    marginTop: 10,
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 12,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Payment Due
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
 
       {/* for Another service */}
-      <TouchableOpacity onPress={() => navigation.navigate("ServiceNeeds")}>
+      {/* <TouchableOpacity>
         <View
           style={{
             flexDirection: "row",
@@ -210,10 +285,13 @@ const SuccessFull = ({ navigation }) => {
             }}
           />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* for Need Help */}
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => Linking.openURL("mailto:support@example.com")}
+        title="support@example.com"
+      >
         <View
           style={{
             flexDirection: "row",
@@ -314,7 +392,7 @@ const SuccessFull = ({ navigation }) => {
           width: "95%",
           backgroundColor: "#00796A",
           height: 50,
-          marginTop: 30,
+          marginTop: 60,
           marginLeft: 10,
           borderRadius: 3,
         }}
@@ -338,5 +416,3 @@ const SuccessFull = ({ navigation }) => {
 };
 
 export default SuccessFull;
-
-const styles = StyleSheet.create({});

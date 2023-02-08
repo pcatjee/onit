@@ -106,6 +106,7 @@ export default function Login({ navigation, route }) {
             style={{
               fontSize: 20,
               fontWeight: "600",
+              marginLeft: 10,
             }}
           >
             Services and More...
@@ -125,7 +126,7 @@ export default function Login({ navigation, route }) {
               marginTop: 7,
             }}
           >
-            Your complete personal assistant.
+            Your personal assistant.
           </Text>
         </View>
       </View>
@@ -150,17 +151,57 @@ export default function Login({ navigation, route }) {
           elevation: 44,
         }}
       >
-        <Text
-          style={{
-            justifyContent: "center",
-            fontSize: 24,
-            fontWeight: "900",
-            marginLeft: 110,
-            marginTop: 20,
-          }}
-        >
-          Everything OniT
-        </Text>
+        <View style={{ flexDirection: "row" }}>
+          <Text
+            style={{
+              justifyContent: "center",
+              fontSize: 24,
+              fontWeight: "900",
+              marginLeft: 110,
+              marginTop: 20,
+              marginRight: 3,
+            }}
+          >
+            Everything
+          </Text>
+          <Text
+            style={{
+              color: "#00796A",
+              marginLeft: 3,
+              justifyContent: "center",
+              fontSize: 24,
+              fontWeight: "900",
+              marginTop: 20,
+            }}
+          >
+            O
+            <Text
+              style={{
+                color: "black",
+                marginLeft: 3,
+                justifyContent: "center",
+                fontSize: 24,
+                fontWeight: "900",
+                marginTop: 20,
+              }}
+            >
+              n
+            </Text>
+            i
+            <Text
+              style={{
+                color: "black",
+                marginLeft: 3,
+                justifyContent: "center",
+                fontSize: 24,
+                fontWeight: "900",
+                marginTop: 20,
+              }}
+            >
+              T
+            </Text>
+          </Text>
+        </View>
 
         <View
           style={{
@@ -171,6 +212,7 @@ export default function Login({ navigation, route }) {
         >
           <Controller
             control={control}
+            every
             render={({ field: { onChange, onBlur, value } }) => (
               <PhoneInput
                 ref={phoneInput}

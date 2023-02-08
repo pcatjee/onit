@@ -1,3 +1,4 @@
+//services
 import React, { useState, useRef, Component } from "react";
 import {
   SafeAreaView,
@@ -14,6 +15,7 @@ import {
   ToastAndroid,
   Dimensions,
   ScrollView,
+  TouchableHighlight,
 } from "react-native";
 import { BottomSheet } from "react-native-btr";
 const { width, height } = Dimensions.get("window");
@@ -23,10 +25,15 @@ import LocationDetail from "../../utils/components/LocationDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../../backend/slice";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import RazorpayCheckout from "react-native-razorpay";
+import CalendarPicker from "react-native-calendar-picker";
 
 const Services = ({ navigation, route }) => {
   const services = route.params;
   const styleTypes = ["dark-content"];
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
+
   const [visibleStatusBar, setVisibleStatusBar] = useState(false);
   const [styleStatusBar, setStyleStatusBar] = useState(styleTypes[0]);
   const [width, setWidth] = useState();
@@ -40,6 +47,7 @@ const Services = ({ navigation, route }) => {
   const [stat, setStat] = useState();
   // const [contry, setCountry] = useState();
   const [naam, setName] = useState();
+  const dispatch = useDispatch();
 
   const [selectedValue, setSelectedValue] = useState("");
 
@@ -51,6 +59,7 @@ const Services = ({ navigation, route }) => {
   //console.log(houseno);
   //8 console.log(selectedValue);
   //console.log(mobile_number);
+  const buttonWidth = Dimensions.get("window").width - 20;
 
   const phoneNumber = useSelector((state) => state.auth.userInfo);
   const city = useSelector((state) => state.auth.city);
@@ -62,16 +71,29 @@ const Services = ({ navigation, route }) => {
   const streetNumber = useSelector((state) => state.auth.streetNumber);
   const subRegion = useSelector((state) => state.auth.subRegion);
 
+  const inputRef = useRef();
+  const handleButtonPress = () => {
+    inputRef.current.focus();
+  };
+
+  const onDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleDone = () => {
+    setShowCalendar(false);
+  };
+
   const onsubmit = async () => {
     setVisible(true);
     let specific_requirement = text;
-    let mobile_number = phoneNumber;
+    let mobile_number = alternate ? alternate : phoneNumber;
     let house_number = houseno;
-    let locality = local;
-    let city = cit;
-    let state = stat;
+    let locality = district;
+    let city = city;
+    let state = region;
     let pincode = pincod;
-    // let country = contry;
+    let country = country;
     let name = naam;
     let time_preference_type = selectedValue;
 
@@ -79,11 +101,11 @@ const Services = ({ navigation, route }) => {
       personal_details: {
         primary_phone: {
           country_code: "+91",
-          mobile_number: phoneNumber,
+          mobile_number: alternate ? alternate : phoneNumber,
         },
         alternate_phone: {
           country_code: "+91",
-          mobile_number: phoneNumber,
+          mobile_number: alternate ? alternate : phoneNumber,
         },
         name: naam,
       },
@@ -91,9 +113,9 @@ const Services = ({ navigation, route }) => {
       service_provided_for: "637b7a0e7c7cd9e139b39d1e",
       address_details: {
         house_number: houseno,
-        locality: district,
+        locality: local,
         city: city,
-        state: region,
+        state: state,
         pincode: pincode,
         country: country,
       },
@@ -120,7 +142,8 @@ const Services = ({ navigation, route }) => {
       }).then(() => {
         setVisible(false);
         ToastAndroid.show("Request Raised", ToastAndroid.SHORT);
-        navigation.navigate("SuccessFull", { data: payload });
+        // navigation.navigate("SuccessFull", { data: payload },);
+        navigation.navigate("SuccessFull", services);
       });
     } catch (error) {
       setVisible(false);
@@ -130,7 +153,35 @@ const Services = ({ navigation, route }) => {
       );
     }
   };
-
+  // razorpay code
+  <TouchableHighlight
+    onPress={() => {
+      var options = {
+        description: "Credits towards consultation",
+        image: "https://i.imgur.com/3g7nmJC.png",
+        currency: "INR",
+        key: "", // Your api key
+        amount: "5000",
+        name: "foo",
+        prefill: {
+          email: "void@razorpay.com",
+          contact: "9191919191",
+          name: "Razorpay Software",
+        },
+        theme: { color: "#F37254" },
+      };
+      RazorpayCheckout.open(options)
+        .then((data) => {
+          // handle success
+          alert(`Success: ${data.razorpay_payment_id}`);
+        })
+        .catch((error) => {
+          // handle failure
+          alert(`Error: ${error.code} | ${error.description}`);
+        });
+    }}
+  ></TouchableHighlight>;
+  // Razorpay code end
   return (
     <View style={styles.container}>
       <View style={styles.sectionStyle}>
@@ -400,7 +451,7 @@ const Services = ({ navigation, route }) => {
 
       {/* for Details section */}
 
-      <View style={{ height: 320, marginTop: 10 }}>
+      <View style={{ height: 220, marginTop: 10 }}>
         {/* For name */}
         <ScrollView>
           <View style={styles.msgStyle}>
@@ -438,14 +489,38 @@ const Services = ({ navigation, route }) => {
                 setSelectedValue(itemValue)
               }
             >
-              <Picker.Item label="Immediately" value="Immediately" />
               <Picker.Item label="Within 24 Hours" value="Within 24 Hours" />
+              <Picker.Item label="Immediately" value="Immediately" />
+
               <Picker.Item
                 label="Specific Date & time"
                 value="Specific Date & time"
               />
             </Picker>
           </View>
+          {/* Calender Picker  */}
+          <View>
+            <View style={styles.msgStyle}>
+              <Text
+                style={{
+                  flex: 1,
+                  fontWeight: "700",
+                  fontSize: 15,
+                  color: "#737373",
+                  marginLeft: 15,
+                }}
+              >
+                Selected Date: {selectedDate.toLocaleDateString()}
+              </Text>
+            </View>
+            <CalendarPicker
+              onDateChange={onDateChange}
+              selectedDayColor="#7300e6"
+              selectedDayTextColor="#FFFFFF"
+            />
+            <Button title="Done" onPress={handleDone} />
+          </View>
+          {/* calender code end  */}
           <View
             style={{
               flexDirection: "row",
@@ -487,16 +562,25 @@ const Services = ({ navigation, route }) => {
                 color: "black",
                 marginLeft: 15,
               }}
+              ref={inputRef}
               placeholder="Alternate Mobile no "
               underlineColorAndroid="transparent"
               placeholderTextColor="#737373"
               returnKeyLabel={"next"}
               onChangeText={(newText) => setAlternate(newText)}
-              defaultValue={phoneNumber}
+              defaultValue={phoneNumber || alternate}
               keyboardType="number-pad"
               maxLength={10}
             />
-            <Icon name="pencil-outline" size={20} color={"black"} />
+
+            {/* <TouchableOpacity > */}
+            <Icon
+              name="pencil-outline"
+              size={20}
+              color={"black"}
+              onPress={handleButtonPress}
+            />
+            {/* </TouchableOpacity> */}
           </View>
           {/* House no */}
           <View style={styles.msgStyle}>
@@ -694,7 +778,7 @@ const Services = ({ navigation, route }) => {
       <TouchableOpacity
         style={{
           justifyContent: "center",
-          width: "95%",
+          width: buttonWidth,
           backgroundColor: "#00796A",
           height: 50,
           marginTop: 5,

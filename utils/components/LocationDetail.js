@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon1 from "react-native-vector-icons/EvilIcons";
-
 import { useDispatch, useSelector } from "react-redux";
 import { setCity, updateLatitude, updateLongitude } from "../../backend/slice";
 import { BottomSheet } from "react-native-btr";
 import MapView, { Marker } from "react-native-maps";
+import * as Progress from "react-native-progress";
 
 const LocationDetail = ({ color }) => {
   const [visible, setVisible] = useState(false);
@@ -55,7 +55,6 @@ const LocationDetail = ({ color }) => {
     }
 
     let { coords } = await Location.getCurrentPositionAsync();
-
     if (coords) {
       const { latitude, longitude } = coords;
       let response = await Location.reverseGeocodeAsync({
@@ -81,19 +80,46 @@ const LocationDetail = ({ color }) => {
     }
   };
 
+  const [coordinate, setCoordinate] = useState({
+    latitude: setLatitude,
+    longitude: setLongitude,
+  });
+  console.log(setLatitude, setLongitude);
+  console.log(coordinate);
   return (
     <View
       style={{
         flexDirection: "row",
         justifyContent: "center",
+        marginLeft: 5,
       }}
     >
       <TouchableOpacity
         style={{ marginTop: 5 }}
         onPress={toggleBottomNavigationView}
       >
-        <Icon1 name="location" size={30} color={color} />
+        {color === "#00796A" ? (
+          <Image
+            source={require("../../assets/image/place-marker-green.gif")}
+            style={{
+              resizeMode: "contain",
+              width: 30,
+              height: 30,
+            }}
+          />
+        ) : (
+          <Image
+            source={require("../../assets/image/place-marker.gif")}
+            style={{
+              resizeMode: "contain",
+              width: 30,
+              height: 30,
+            }}
+          />
+        )}
+        {/* <Icon1 name="location" size={30} color={color} /> */}
       </TouchableOpacity>
+
       <Text
         style={{
           flex: 1,
@@ -104,10 +130,18 @@ const LocationDetail = ({ color }) => {
           margin: 6,
         }}
       >
-        {/* Sector XXX, Noida */}
         {displayCurrentAddress}
-        <Icon name="pencil-outline" size={20} color={color} />
       </Text>
+      <TouchableOpacity
+        onPress={toggleBottomNavigationView}
+        style={{
+          marginTop: 6,
+          marginRight: 12,
+        }}
+      >
+        <Icon name="pencil-outline" size={20} color={color} />
+      </TouchableOpacity>
+
       <BottomSheet
         visible={visible}
         onBackButtonPress={toggleBottomNavigationView}
@@ -115,7 +149,7 @@ const LocationDetail = ({ color }) => {
       >
         <View
           style={{
-            backgroundColor: "#fff",
+            backgroundColor: "#00796A",
             width: "100%",
             height: 450,
             justifyContent: "center",
@@ -131,7 +165,13 @@ const LocationDetail = ({ color }) => {
                 >
                   Share Using
                 </Text> */}
-          {setLatitude && (
+          {/* Map View  */}
+          <View>
+            <Text style={{ fontSize: 16, color: "#fff" }}>
+              {displayCurrentAddress}
+            </Text>
+          </View>
+          {setLatitude ? (
             <MapView
               initialRegion={{
                 latitude: setLatitude,
@@ -147,12 +187,13 @@ const LocationDetail = ({ color }) => {
                   latitude: setLatitude,
                   longitude: setLongitude,
                 }}
-                title="Your location"
-                description="short description"
+                title={displayCurrentAddress}
                 identifier="origin"
                 pinColor="#C92A2A"
               />
             </MapView>
+          ) : (
+            <Text style={{ fontSize: 16, color: "#fff" }}>Loading...</Text>
           )}
         </View>
       </BottomSheet>

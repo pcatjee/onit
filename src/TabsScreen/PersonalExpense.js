@@ -8,12 +8,19 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
+  Image,
 } from "react-native";
 import Task from "../../utils/components/appoint";
+import ClockIcon from "react-native-vector-icons/AntDesign";
+import PlusIcon from "react-native-vector-icons/AntDesign";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import AcService from "../Services Screen/AcService";
+import Ongoing from "../TabsScreen/Ongoing";
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
+  const Tab = createMaterialTopTabNavigator();
 
   const handleAddTask = () => {
     Keyboard.dismiss();
@@ -36,43 +43,237 @@ export default function App() {
         }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Today's Tasks */}
-        <View style={styles.tasksWrapper}>
+        <View style={styles.personalExpenseWrapper}>
           <Text style={styles.sectionTitle}>Personal Expense</Text>
           <View style={styles.items}>
-            {/* This is where the tasks will go! */}
-            {taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => completeTask(index)}
-                >
-                  <Task text={item} />
-                </TouchableOpacity>
-              );
-            })}
+            <View style={styles.itemBox}>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  paddingTop: 10,
+                }}
+              >
+                You Owe
+              </Text>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: "#00796A",
+                  fontWeight: "600",
+                }}
+              >
+                ₹680
+              </Text>
+            </View>
+            <View style={styles.itemBox}>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  paddingTop: 10,
+                }}
+              >
+                You are Owed
+              </Text>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: "#DD3131",
+                  fontWeight: "600",
+                }}
+              >
+                ₹200
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: "#F2BB13",
+                width: "32%",
+                borderRadius: 10,
+              }}
+            >
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  paddingTop: 10,
+                  color: "white",
+                }}
+              >
+                Balance
+              </Text>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: "white",
+                  fontWeight: "600",
+                }}
+              >
+                ₹480
+              </Text>
+            </View>
           </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: 10,
+              marginBottom: 10,
+              marginHorizontal: 20,
+            }}
+          >
+            {/* Top tab navigation  */}
+            <Tab.Navigator
+              screenOptions={{
+                tabBarActiveTintColor: "#e91e63",
+                tabBarLabelStyle: { fontSize: 12 },
+              }}
+            >
+              <Tab.Screen name="AcService" component={AcService} />
+              <Tab.Screen name="Ongoing" component={Ongoing} />
+            </Tab.Navigator>
+            {/* <Text>Daily, Weekly, Monthly Report Here</Text> */}
+          </View>
+          {/* Expense Date  */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: 20,
+              marginBottom: 1,
+              backgroundColor: "white",
+              height: 70,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <ClockIcon name="clockcircleo" size={20} color={"black"} />
+              <Text
+                style={{
+                  marginLeft: 10,
+                  fontSize: 16,
+                }}
+              >
+                18 April, Monday
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ color: "#579AFF", marginRight: 25 }}>₹5000</Text>
+              <Text style={{ color: "#D92B2A" }}>₹1,730</Text>
+            </View>
+          </View>
+
+          {/* Expense Report  */}
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                marginBottom: 1,
+                backgroundColor: "white",
+                height: 70,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                {/* <BuildingIcon name="building" size={25} color={"#00796A"} /> */}
+                <Image
+                  source={require("../../assets/image/money.png")}
+                  style={{
+                    resizeMode: "contain",
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      fontSize: 18,
+                    }}
+                  >
+                    Cash
+                  </Text>
+                  <Text style={{ marginLeft: 10 }}>Online food order</Text>
+                </View>
+              </View>
+              <Text style={{ color: "#D92B2A" }}>₹178-</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Paytm Sample Expense  */}
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                marginBottom: 1,
+                backgroundColor: "white",
+                height: 70,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("../../assets/image/paytm.png")}
+                  style={{
+                    resizeMode: "contain",
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      fontSize: 18,
+                    }}
+                  >
+                    Paytm
+                  </Text>
+                  <Text style={{ marginLeft: 10 }}>Cab to home</Text>
+                </View>
+              </View>
+              <Text style={{ color: "#D92B2A" }}>₹180-</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Add New button  */}
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 30,
+                backgroundColor: "#00796A",
+                marginHorizontal: 140,
+                height: 50,
+                // width: 120,
+                borderRadius: 30,
+              }}
+            >
+              <PlusIcon name="pluscircleo" size={20} color={"white"} />
+              <Text style={{ marginLeft: 5, color: "white" }}>Add New</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* Write a task */}
-      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder={"Write a task"}
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
-        <TouchableOpacity onPress={() => handleAddTask()}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -82,7 +283,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#E8EAED",
   },
-  tasksWrapper: {
+  personalExpenseWrapper: {
     paddingTop: 20,
     paddingHorizontal: 0,
   },
@@ -92,8 +293,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   items: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     height: 70,
+    marginHorizontal: 20,
   },
   writeTaskWrapper: {
     position: "absolute",
@@ -125,5 +329,10 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
     fontSize: 30,
+  },
+  itemBox: {
+    backgroundColor: "white",
+    width: "32%",
+    borderRadius: 10,
   },
 });

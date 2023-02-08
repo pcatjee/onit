@@ -8,8 +8,14 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
+  Image,
 } from "react-native";
-import Task from "../../utils/components/appoint";
+import PlusIcon from "react-native-vector-icons/AntDesign";
+import RightIcon from "react-native-vector-icons/MaterialIcons";
+import WorkIcon from "react-native-vector-icons/MaterialIcons";
+import BuildingIcon from "react-native-vector-icons/FontAwesome5";
+import FriendsIcon from "react-native-vector-icons/FontAwesome5";
+import AddIcon from "react-native-vector-icons/AntDesign";
 
 export default function App() {
   const [task, setTask] = useState();
@@ -36,43 +42,311 @@ export default function App() {
         }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Today's Tasks */}
-        <View style={styles.tasksWrapper}>
+        {/* Money Manager */}
+        <View style={styles.moneyManagerWrapper}>
           <Text style={styles.sectionTitle}>Manage Money</Text>
           <View style={styles.items}>
-            {/* This is where the tasks will go! */}
-            {taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => completeTask(index)}
+            <View style={styles.itemBox}>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  paddingTop: 10,
+                }}
+              >
+                You Owe
+              </Text>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: "#00796A",
+                  fontWeight: "600",
+                }}
+              >
+                ₹680
+              </Text>
+            </View>
+            <View style={styles.itemBox}>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  paddingTop: 10,
+                }}
+              >
+                You are Owed
+              </Text>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: "#DD3131",
+                  fontWeight: "600",
+                }}
+              >
+                ₹200
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: "#F2BB13",
+                width: "32%",
+                borderRadius: 10,
+              }}
+            >
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  paddingTop: 10,
+                  color: "white",
+                }}
+              >
+                Balance
+              </Text>
+              <Text
+                style={{
+                  paddingLeft: 10,
+                  color: "white",
+                  fontWeight: "600",
+                }}
+              >
+                ₹480
+              </Text>
+            </View>
+          </View>
+          {/* Group  */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 20,
+              marginTop: 10,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+              }}
+            >
+              Group
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "#DFEBEA",
+                borderRadius: 5,
+                height: 30,
+                width: 110,
+                paddingHorizontal: 5,
+              }}
+            >
+              <PlusIcon name="pluscircleo" size={20} color={"#00796A"} />
+              <Text style={{ marginLeft: 5, color: "#00796A" }}>
+                Create New
+              </Text>
+            </View>
+          </View>
+
+          {/* Group Items  */}
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                marginTop: 20,
+                marginBottom: 1,
+                backgroundColor: "white",
+                height: 60,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <WorkIcon name="work" size={25} color={"#00796A"} />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                  }}
                 >
-                  <Task text={item} />
-                </TouchableOpacity>
-              );
-            })}
+                  Colleagues
+                </Text>
+              </View>
+              <RightIcon
+                name="keyboard-arrow-right"
+                size={25}
+                color={"black"}
+              />
+            </View>
+          </TouchableOpacity>
+          {/* Room mates  */}
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                marginBottom: 1,
+                backgroundColor: "white",
+                height: 60,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <BuildingIcon name="building" size={25} color={"#00796A"} />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                  }}
+                >
+                  Roommates
+                </Text>
+              </View>
+              <RightIcon
+                name="keyboard-arrow-right"
+                size={25}
+                color={"black"}
+              />
+            </View>
+          </TouchableOpacity>
+          {/* Friends  */}
+          <TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                backgroundColor: "white",
+                height: 60,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <FriendsIcon name="user-friends" size={25} color={"#00796A"} />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                  }}
+                >
+                  Friends
+                </Text>
+              </View>
+              <RightIcon
+                name="keyboard-arrow-right"
+                size={25}
+                color={"black"}
+              />
+            </View>
+          </TouchableOpacity>
+
+          {/* Friends  */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 20,
+              marginTop: 10,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+              }}
+            >
+              Friends
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "#DFEBEA",
+                borderRadius: 5,
+                height: 30,
+                width: 125,
+                paddingHorizontal: 5,
+              }}
+            >
+              {/* <PlusIcon name="pluscircleo" size={20} color={"#00796A"} /> */}
+              <AddIcon name="adduser" size={20} color={"#00796A"} />
+              <Text
+                style={{
+                  marginLeft: 5,
+                  color: "#00796A",
+                }}
+              >
+                Invite a Friend
+              </Text>
+            </View>
+          </View>
+
+          {/* Friend list  */}
+          <View style={{ marginTop: 10 }}>
+            <TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingHorizontal: 20,
+                  marginBottom: 1,
+                  backgroundColor: "white",
+                  height: 60,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* <BuildingIcon name="building" size={25} color={"#00796A"} /> */}
+                  <Image
+                    source={require("../../assets/image/naruto.png")}
+                    style={{
+                      resizeMode: "cover",
+                      width: 30,
+                      height: 30,
+                      borderRadius: 4,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      fontSize: 18,
+                    }}
+                  >
+                    Nitin Maurya
+                  </Text>
+                </View>
+                <RightIcon
+                  name="keyboard-arrow-right"
+                  size={25}
+                  color={"black"}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-
-      {/* Write a task */}
-      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder={"Write a task"}
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
-        <TouchableOpacity onPress={() => handleAddTask()}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -82,7 +356,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#E8EAED",
   },
-  tasksWrapper: {
+  moneyManagerWrapper: {
     paddingTop: 20,
     paddingHorizontal: 0,
   },
@@ -92,8 +366,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   items: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     height: 70,
+    marginHorizontal: 20,
   },
   writeTaskWrapper: {
     position: "absolute",
@@ -125,5 +402,10 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
     fontSize: 30,
+  },
+  itemBox: {
+    backgroundColor: "white",
+    width: "32%",
+    borderRadius: 10,
   },
 });
