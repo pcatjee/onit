@@ -1,10 +1,10 @@
 import { View, Text, Image } from "react-native";
 import React, { useState } from "react";
 import ExclamationIcon from "react-native-vector-icons/FontAwesome";
-// import StarRating from "react-native-star-rating-widget";
+import StarRating from "react-native-star-rating-widget";
 
 const Completed = () => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(4);
   return (
     <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
       <View
@@ -130,8 +130,9 @@ const Completed = () => {
             alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: "600" }}>Star Ratings</Text>
+          {/* <Text style={{ fontSize: 16, fontWeight: "600" }}>Star Ratings</Text> */}
           {/* <StarRating rating={rating} onChange={setRating} /> */}
+          <StarRating rating={rating} />
           <View
             style={{
               backgroundColor: "#00796A",

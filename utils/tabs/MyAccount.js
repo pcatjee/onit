@@ -29,6 +29,10 @@ import CameraIcon from "react-native-vector-icons/Entypo";
 import GalleryIcon from "react-native-vector-icons/Entypo";
 import DeleteIcon1 from "react-native-vector-icons/MaterialIcons";
 
+import LinkedInIcon from "react-native-vector-icons/Foundation";
+import TwitterIcon from "react-native-vector-icons/AntDesign";
+import FacebookIcon from "react-native-vector-icons/AntDesign";
+
 import * as ImagePicker from "expo-image-picker";
 
 const MyAccount = ({ navigation }) => {
@@ -407,6 +411,26 @@ const MyAccount = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
+      {/* for Social Icons  */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginHorizontal: 100,
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <View style={style.circularProfileBox}>
+          <LinkedInIcon name="social-linkedin" size={25} color={"#00796A"} />
+        </View>
+        <View style={style.circularProfileBox}>
+          <TwitterIcon name="twitter" size={25} color={"#00796A"} />
+        </View>
+        <View style={style.circularProfileBox}>
+          <FacebookIcon name="facebook-square" size={25} color={"#00796A"} />
+        </View>
+      </View>
 
       {/* BottomSheet  */}
       <BottomSheet
@@ -624,4 +648,13 @@ const MyAccount = ({ navigation }) => {
 
 export default MyAccount;
 
-const style = StyleSheet.create({});
+const style = StyleSheet.create({
+  circularProfileBox: {
+    backgroundColor: "#CCE4E1",
+    width: 50,
+    height: 50,
+    borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
