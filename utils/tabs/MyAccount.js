@@ -13,6 +13,7 @@ import {
   ScrollView,
   ImageBackground,
   PermissionsAndroid,
+  Alert,
 } from "react-native";
 import { BottomSheet } from "react-native-btr";
 import Icon from "react-native-vector-icons/Entypo";
@@ -26,9 +27,9 @@ import SearchIcon from "react-native-vector-icons/AntDesign";
 import MicIcon from "react-native-vector-icons/Feather";
 import CameraIcon from "react-native-vector-icons/Entypo";
 import GalleryIcon from "react-native-vector-icons/Entypo";
+import DeleteIcon1 from "react-native-vector-icons/MaterialIcons";
 
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 
 const MyAccount = ({ navigation }) => {
   const [avatarSource, setAvatarSource] = useState(null);
@@ -36,6 +37,7 @@ const MyAccount = ({ navigation }) => {
   const [galleryPhoto, setGalleryPhoto] = useState();
   const [visible, setVisible] = useState(false);
   const [visible1, setVisible1] = useState(false);
+  const [image, setImage] = useState(null);
   const toggleBottomNavigationView = () => {
     setVisible(!visible);
   };
@@ -43,104 +45,109 @@ const MyAccount = ({ navigation }) => {
     setVisible1(!visible1);
   };
 
-  // const openCamera = () => {
-  //   const options = {
-  //     storageOptions: {
-  //       path: "images",
-  //       mediaType: "photo",
-  //     },
-  //     includeBase64: true,
-  //   };
-  //   launchCamera(options, (response) => {
-  //     console.log("Response=", response);
-  //     if (response.didCancel) {
-  //       console.log("User cancelled image picker");
-  //     } else if (response.error) {
-  //       console.log("ImagePicker Error", response.error);
-  //     } else if (response.customBottom) {
-  //       console.log("User tapped custom button:" + response.customButton);
-  //     } else {
-  //       const source = { uri: "data:image/jpeg;base64," + response.base64 };
-  //       setImageUri(source);
-  //     }
-  //   });
-  // };
-  let options = {
-    saveToPhotos: true,
-    mediaType: "photo",
-  };
-  const openCamera = async () => {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      // const result = await launchCamera(options);
-      // setImageUri(result.assets[0].uri);
-      try {
-        const result = await launchCamera(options);
-        setImageUri(result.assets[0].uri);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  const openGallery = async () => {
-    const result = await launchImageLibrary(options);
-    setGalleryPhoto(result.assets[0].uri);
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+    toggleProfileImage();
+  };
+  const takePicture = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+    toggleProfileImage();
+  };
+  const confirmDeletion = () => {
+    setImage(null);
+    toggleProfileImage();
+  };
+  // code show alert
+  const showAlert = () => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to remove profile photo?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => toggleProfileImage(),
+          style: "cancel",
+        },
+        { text: "Confirm", onPress: () => confirmDeletion() },
+      ],
+      { cancelable: false }
+    );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <ImageBackground
-        source={require("../../assets/image/bg.png")}
-        style={{ opacity: 50 }}
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        justifyContent: "space-between",
+      }}
+    >
+      <StatusBar backgroundColor="#00796A" />
+      {/* Image Header   */}
+      <View
+        style={{
+          flexDirection: "column",
+          //  justifyContent: "center",
+          height: 170,
+          alignItems: "center",
+          backgroundColor: "#00796A",
+          //opacity: 0.7,
+          marginBottom: 20,
+        }}
       >
-        <StatusBar backgroundColor="#00796A" />
-
         <View
           style={{
-            flexDirection: "column",
-            //  justifyContent: "center",
-            height: 170,
-            alignItems: "center",
-            backgroundColor: "#00796A",
-            //opacity: 0.7,
-            marginBottom: 20,
+            flexDirection: "row",
+            // justifyContent: "space-between",
+            alignItems: "flex-end",
+            // marginTop: 5,
+            marginLeft: 120,
           }}
         >
-          <View
+          <Text
             style={{
-              flexDirection: "row",
-              // justifyContent: "space-between",
-              alignItems: "flex-end",
-              // marginTop: 5,
-              marginLeft: 120,
+              fontSize: 21,
+              fontWeight: "700",
+              marginTop: 20,
+              color: "#fff",
             }}
           >
-            <Text
-              style={{
-                fontSize: 21,
-                fontWeight: "700",
-                marginTop: 20,
-                color: "#fff",
-              }}
-            >
-              My Account
-            </Text>
+            My Account
+          </Text>
 
-            <Icon1
-              style={{
-                marginLeft: 100,
-              }}
-              name="pencil-outline"
-              size={20}
-              color={"white"}
-            />
-          </View>
+          <Icon1
+            style={{
+              marginLeft: 100,
+            }}
+            name="pencil-outline"
+            size={20}
+            color={"white"}
+          />
+        </View>
 
-          <TouchableOpacity onPress={toggleProfileImage}>
+        <TouchableOpacity onPress={toggleProfileImage}>
+          {image === null ? (
             <Image
               source={require("../../assets/image/profile.png")}
+              // source={require("../../assets/image/profile.png") || { uri: image }}
               style={{
                 height: 90,
                 width: 90,
@@ -149,31 +156,37 @@ const MyAccount = ({ navigation }) => {
                 borderRadius: 60,
               }}
             />
+          ) : (
             <Image
+              source={{ uri: image }}
               style={{
-                width: 30,
-                height: 30,
-                marginLeft: 60,
-                marginTop: -30,
-                color: "white",
+                height: 90,
+                width: 90,
+                marginTop: 10,
+                marginLeft: 2,
+                borderRadius: 60,
               }}
-              source={require("../../assets/image/camera1.png")}
             />
-            {/* <Icon
-              style={{
-                marginLeft: 50,
-                marginTop: -30,
-                borderColor: "white",
-                borderWidth: 6,
+          )}
 
-                borderRadius: 30,
-              }}
-              name="camera"
-              size={25}
-              color={"#00796A"} */}
-          </TouchableOpacity>
-        </View>
-
+          <Image
+            style={{
+              width: 30,
+              height: 30,
+              marginLeft: 60,
+              marginTop: -30,
+              color: "white",
+            }}
+            source={require("../../assets/image/camera1.png")}
+          />
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-start",
+        }}
+      >
         {/* for Booking */}
         <TouchableOpacity onPress={() => navigation.navigate("MyBookings")}>
           <View
@@ -361,44 +374,39 @@ const MyAccount = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
-
-        {/* for sign out */}
-        <View
+      </View>
+      {/* for sign out */}
+      <View
+        style={{
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity
           style={{
+            justifyContent: "center",
             alignItems: "center",
+            width: "25%",
+            height: 40,
+            // marginTop: 120,
+            marginBottom: 50,
+            marginLeft: 10,
+            borderRadius: 3,
           }}
         >
-          <TouchableOpacity
+          <Text
             style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: "25%",
-              height: 40,
-              marginTop: 120,
-              marginBottom: 50,
-              marginLeft: 10,
-              borderRadius: 3,
+              fontWeight: "900",
+              fontSize: 19,
+              letterSpacing: 1,
+              textAlign: "center",
+              position: "relative",
+              color: "#00796A",
             }}
-            //</View>onPress={() => { console.log("coming soon") }}>
-            // onPress={() => {
-            //   alert("coming");
-            // }}
           >
-            <Text
-              style={{
-                fontWeight: "900",
-                fontSize: 19,
-                letterSpacing: 1,
-                textAlign: "center",
-                position: "relative",
-                color: "#00796A",
-              }}
-            >
-              Sign Out
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
+            Sign Out
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {/* BottomSheet  */}
       <BottomSheet
@@ -551,6 +559,7 @@ const MyAccount = ({ navigation }) => {
             backgroundColor: "white",
             width: "100%",
             height: 150,
+            flexDirection: "row",
           }}
         >
           <View
@@ -569,7 +578,8 @@ const MyAccount = ({ navigation }) => {
                 marginTop: 30,
               }}
             >
-              <TouchableOpacity onPress={() => openCamera()}>
+              {/* camera option to upload  */}
+              <TouchableOpacity onPress={takePicture}>
                 <View
                   style={{
                     alignItems: "center",
@@ -579,7 +589,8 @@ const MyAccount = ({ navigation }) => {
                   <Text style={{ fontSize: 16 }}>Camera</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={openGallery}>
+              {/* open gallery option to upload  */}
+              <TouchableOpacity onPress={pickImage}>
                 <View
                   style={{
                     alignItems: "center",
@@ -592,6 +603,19 @@ const MyAccount = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
+          {image && (
+            <TouchableOpacity onPress={showAlert}>
+              <DeleteIcon1
+                name="delete"
+                size={30}
+                color={"#00796A"}
+                style={{
+                  marginRight: 10,
+                  marginTop: 10,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </BottomSheet>
     </View>

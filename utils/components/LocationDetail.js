@@ -117,14 +117,13 @@ const LocationDetail = ({ color }) => {
             }}
           />
         )}
-        {/* <Icon1 name="location" size={30} color={color} /> */}
       </TouchableOpacity>
 
       <Text
         style={{
           flex: 1,
           fontWeight: "700",
-          fontSize: 18,
+          fontSize: 16,
           color,
           marginLeft: 5,
           margin: 6,

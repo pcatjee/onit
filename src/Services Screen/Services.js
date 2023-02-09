@@ -1,5 +1,5 @@
 //services
-import React, { useState, useRef, Component } from "react";
+import React, { useState, useRef, Component, useEffect } from "react";
 import {
   SafeAreaView,
   Button,
@@ -26,14 +26,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../../backend/slice";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RazorpayCheckout from "react-native-razorpay";
-import CalendarPicker from "react-native-calendar-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const Services = ({ navigation, route }) => {
   const services = route.params;
   const styleTypes = ["dark-content"];
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showCalendar, setShowCalendar] = useState(false);
 
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(true);
+  const [choosenDate, setChoosenDate] = useState();
+  const [choosenTime, setChoosenTime] = useState();
   const [visibleStatusBar, setVisibleStatusBar] = useState(false);
   const [styleStatusBar, setStyleStatusBar] = useState(styleTypes[0]);
   const [width, setWidth] = useState();
@@ -76,13 +77,39 @@ const Services = ({ navigation, route }) => {
     inputRef.current.focus();
   };
 
-  const onDateChange = (date) => {
-    setSelectedDate(date);
+  // date handlers
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
 
-  const handleDone = () => {
-    setShowCalendar(false);
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
+
+  const handleConfirm = (date) => {
+    // console.warn("A date has been picked: ", date.toLocaleTimeString());
+
+    setChoosenDate(date.toLocaleDateString());
+    // timeFormatter(date.toLocaleTimeString());
+    setChoosenTime(date.toLocaleTimeString());
+    hideDatePicker();
+  };
+
+  const timeFormatter = (timeString) => {
+    const [hours, minutes, seconds] = timeString.split(":");
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(seconds);
+
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    setChoosenTime(formattedTime);
+  };
+  // date handler end
 
   const onsubmit = async () => {
     setVisible(true);
@@ -182,6 +209,17 @@ const Services = ({ navigation, route }) => {
     }}
   ></TouchableHighlight>;
   // Razorpay code end
+  const [pickerValue, setPickerValue] = useState("");
+  const [showDatPicker, setShowDatPicker] = useState(false);
+  const handleValueChange = (value) => {
+    setPickerValue(value);
+    if (value === "date") {
+      setShowDatPicker(true);
+    } else {
+      setShowDatPicker(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.sectionStyle}>
@@ -407,14 +445,10 @@ const Services = ({ navigation, route }) => {
         </BottomSheet> */}
 
         <LocationDetail color={"#00796A"} />
-        {/* <Image
-          source={require("../../assets/logo/pen.png")}
-          style={{ height: 25, width: 25 }}
-        /> */}
       </View>
 
       {/* for choosed service section */}
-      <View style={styles.plumberStyle}>
+      <View style={styles.serviceTitle}>
         <Image
           source={require("../../assets/logo/ac.png")}
           style={styles.imageStyle}
@@ -441,7 +475,7 @@ const Services = ({ navigation, route }) => {
           style={{
             fontSize: 16,
             marginLeft: 15,
-            marginTop: 15,
+            // marginTop: 15,
             fontWeight: "600",
           }}
         >
@@ -451,7 +485,7 @@ const Services = ({ navigation, route }) => {
 
       {/* for Details section */}
 
-      <View style={{ height: 220, marginTop: 10 }}>
+      <View style={{ height: 250 }}>
         {/* For name */}
         <ScrollView>
           <View style={styles.msgStyle}>
@@ -470,7 +504,6 @@ const Services = ({ navigation, route }) => {
               placeholderTextColor="#737373"
             />
           </View>
-
           {/* for visit schedule */}
           <View style={styles.withinStyle}>
             <Image
@@ -484,7 +517,11 @@ const Services = ({ navigation, route }) => {
             />
             <Picker
               selectedValue={selectedValue}
-              style={{ height: 60, width: 250, fontWeight: "600" }}
+              style={{
+                // height: 50,
+                width: 250,
+                fontWeight: "600",
+              }}
               onValueChange={(itemValue, itemIndex) =>
                 setSelectedValue(itemValue)
               }
@@ -499,28 +536,45 @@ const Services = ({ navigation, route }) => {
             </Picker>
           </View>
           {/* Calender Picker  */}
-          <View>
-            <View style={styles.msgStyle}>
-              <Text
-                style={{
-                  flex: 1,
-                  fontWeight: "700",
-                  fontSize: 15,
-                  color: "#737373",
-                  marginLeft: 15,
-                }}
-              >
-                Selected Date: {selectedDate.toLocaleDateString()}
-              </Text>
+          {selectedValue === "Specific Date & time" && (
+            <View>
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="datetime"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
+
+              {/* Selected date  */}
+              <TouchableOpacity onPress={showDatePicker}>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    backgroundColor: "#fff",
+                    height: 50,
+                    marginLeft: 22,
+                    marginBottom: 20,
+                    marginRight: 22,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    borderColor: "#ddd",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: "700",
+                      fontSize: 15,
+                      // color: "#737373",
+                      marginLeft: 15,
+                    }}
+                  >
+                    {choosenDate + " | " + choosenTime}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-            <CalendarPicker
-              onDateChange={onDateChange}
-              selectedDayColor="#7300e6"
-              selectedDayTextColor="#FFFFFF"
-            />
-            <Button title="Done" onPress={handleDone} />
-          </View>
-          {/* calender code end  */}
+          )}
+
           <View
             style={{
               flexDirection: "row",
@@ -552,7 +606,6 @@ const Services = ({ navigation, route }) => {
               placeholderTextColor="#737373"
             />
           </View>
-
           <View style={styles.msgStyle}>
             <TextInput
               style={{
@@ -600,7 +653,6 @@ const Services = ({ navigation, route }) => {
               defaultValue={houseno}
             />
           </View>
-
           {/* Locality  */}
           {/* <View style={styles.msgStyle}>
             <TextInput
@@ -645,7 +697,6 @@ const Services = ({ navigation, route }) => {
               maxLength={6}
             />
           </View>
-
           {/* State & Country */}
           {/* <View
             style={{
@@ -704,7 +755,11 @@ const Services = ({ navigation, route }) => {
       </View>
 
       {/* for coupon */}
-      <View style={{ backgroundColor: "#f8f8f8" }}>
+      <View
+        style={{
+          backgroundColor: "#f8f8f8",
+        }}
+      >
         <Text
           style={{
             fontSize: 16,
@@ -728,7 +783,7 @@ const Services = ({ navigation, route }) => {
               color: "black",
               marginLeft: 35,
             }}
-            placeholder="Offer Code"
+            placeholder="onit2023"
             underlineColorAndroid="transparent"
             //placeholderTextColor=""
           />
@@ -781,8 +836,8 @@ const Services = ({ navigation, route }) => {
           width: buttonWidth,
           backgroundColor: "#00796A",
           height: 50,
-          marginTop: 5,
-          marginLeft: 10,
+          marginBottom: 10,
+          marginHorizontal: 10,
           borderRadius: 3,
         }}
         //</View>onPress={() => { console.log("coming soon") }}>
@@ -817,8 +872,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
     height: height,
     width: width,
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    // alignItems: "center",
+    justifyContent: "space-between",
   },
   sectionStyle: {
     flexDirection: "row",
@@ -837,13 +892,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 20,
   },
-  plumberStyle: {
+  serviceTitle: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
     height: 60,
-    marginTop: 15,
+    // marginTop: 15,
   },
   msgStyle: {
     flexDirection: "row",
@@ -864,7 +919,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#fff",
-    height: 56,
+    height: 50,
     margin: 22,
     marginTop: 0,
     borderRadius: 2,
