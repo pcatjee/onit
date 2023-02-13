@@ -447,127 +447,137 @@ const MyAccount = ({ navigation }) => {
             // alignItems: "center",
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              marginLeft: 16,
-              marginTop: 15,
-            }}
-          >
-            <Text style={{ fontSize: 22, fontWeight: "600" }}>
-              Search Location
-            </Text>
-            <TouchableOpacity onPress={toggleBottomNavigationView}>
-              <CloseIcon
-                name="close"
-                size={30}
-                color={"black"}
-                style={{ marginHorizontal: "45%" }}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: 16,
-            }}
-          >
-            <SearchIcon name="search1" size={25} color={"black"} />
-
-            <TextInput
+          <View style={{ flex: 1, marginHorizontal: 10 }}>
+            <View
               style={{
-                fontWeight: "500",
-                fontSize: 18,
-                marginLeft: 5,
-                width: "80%",
-                padding: 11,
-                letterSpacing: 0,
-                borderColor: "#ddd",
-                borderWidth: 1,
-                borderRadius: 5,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 15,
               }}
-              placeholder="Search Your Location"
-            />
-            <MicIcon name="mic" size={25} color={"black"} />
-          </View>
+            >
+              <Text style={{ fontSize: 22, fontWeight: "600" }}>
+                Search Location
+              </Text>
+              <TouchableOpacity onPress={toggleBottomNavigationView}>
+                <CloseIcon
+                  name="close"
+                  size={30}
+                  color={"black"}
+                  // style={{ marginHorizontal: "45%" }}
+                />
+              </TouchableOpacity>
+            </View>
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              marginLeft: 16,
-            }}
-          >
-            <LocationIcon name="my-location" size={20} color={"black"} />
-            <Text style={{ fontSize: 18, color: "#0066FF", marginLeft: 6 }}>
-              Use Current Location
-            </Text>
-          </View>
-          <View style={{ marginLeft: 16 }}>
-            <Text style={{ fontSize: 19, fontWeight: "600" }}>
-              Saved Location
-            </Text>
-          </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <SearchIcon name="search1" size={25} color={"black"} />
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              marginLeft: 16,
-              marginTop: 15,
-            }}
-          >
-            <HomeIcon name="home" size={30} color={"black"} />
-            <View>
-              <Text style={{ fontSize: 18, marginLeft: 6 }}>Home</Text>
-              <Text style={{ fontSize: 18, marginLeft: 6, color: "#ddd" }}>
-                Delivery to Home (E-36) Block 32, Noida 90
+              <TextInput
+                style={{
+                  flex: 1,
+                  fontWeight: "500",
+                  fontSize: 18,
+                  width: "100%",
+                  padding: 11,
+                  letterSpacing: 0,
+                  borderColor: "#ddd",
+                  borderWidth: 1,
+                  borderRadius: 5,
+                }}
+                placeholder="Search Your Location"
+              />
+              <MicIcon name="mic" size={25} color={"black"} />
+            </View>
+            {/* location selector  */}
+            <View
+              style={{
+                // flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <LocationIcon name="my-location" size={20} color={"black"} />
+              <Text style={{ fontSize: 18, color: "#0066FF", marginLeft: 10 }}>
+                Use Current Location
               </Text>
             </View>
-          </View>
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "flex-start",
-              marginLeft: 16,
-              marginTop: 17,
-            }}
-          >
-            <PlusIcon name="plus" size={25} color={"#0066FF"} />
-            <Text style={{ fontSize: 18, color: "#0066FF", marginLeft: 6 }}>
-              Add Address
-            </Text>
-          </View>
+            {/* Saved location  */}
+            <View
+              style={{
+                marginTop: 20,
+              }}
+            >
+              <Text style={{ fontSize: 19, fontWeight: "600" }}>
+                Saved Location
+              </Text>
+            </View>
 
-          <View style={{ marginLeft: 16 }}>
-            <Text style={{ fontSize: 19, fontWeight: "600" }}>
+            {/* Home icon and address  */}
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+              }}
+            >
+              <HomeIcon name="home" size={30} color={"black"} />
+              <View
+                style={{
+                  marginLeft: 10,
+                }}
+              >
+                <Text style={{ fontSize: 18 }}>Home</Text>
+                <Text
+                  numberOfLines={3}
+                  style={{
+                    fontSize: 18,
+                    color: "grey",
+                    marginRight: 20,
+                  }}
+                >
+                  Delivery to Home (E-36) Block 32, Noida 90
+                </Text>
+              </View>
+            </View>
+            {/* add address  */}
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 20,
+              }}
+            >
+              <PlusIcon name="plus" size={25} color={"#0066FF"} />
+              <Text style={{ fontSize: 18, color: "#0066FF", marginLeft: 6 }}>
+                Add Address
+              </Text>
+            </View>
+
+            <Text style={{ fontSize: 19, fontWeight: "600", marginTop: 20 }}>
               Recent Location
             </Text>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              marginLeft: 16,
-              marginTop: 14,
-            }}
-          >
-            <RecentIcon
-              name="clock-time-four-outline"
-              size={25}
-              color={"black"}
-            />
-            <Text style={{ fontSize: 19, marginLeft: 6 }}>
-              Delivery to Home (E-36A) Block 32-22 Ambdekar Camp
-            </Text>
+            {/* recent locations  */}
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+              }}
+            >
+              <RecentIcon
+                name="clock-time-four-outline"
+                size={25}
+                color={"black"}
+              />
+              <Text style={{ fontSize: 19, marginLeft: 6 }}>
+                Delivery to Home (E-36A) Block 32-22 Ambdekar Camp
+              </Text>
+            </View>
           </View>
         </View>
       </BottomSheet>

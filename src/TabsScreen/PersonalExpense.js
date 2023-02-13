@@ -14,8 +14,9 @@ import Task from "../../utils/components/appoint";
 import ClockIcon from "react-native-vector-icons/AntDesign";
 import PlusIcon from "react-native-vector-icons/AntDesign";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import AcService from "../Services Screen/AcService";
-import Ongoing from "../TabsScreen/Ongoing";
+import Daily from "../TabsScreen/Daily";
+import Weekly from "../TabsScreen/Weekly";
+import Monthly from "../TabsScreen/Monthly";
 
 export default function App() {
   const [task, setTask] = useState();
@@ -127,8 +128,9 @@ export default function App() {
                 tabBarLabelStyle: { fontSize: 12 },
               }}
             >
-              <Tab.Screen name="AcService" component={AcService} />
-              <Tab.Screen name="Ongoing" component={Ongoing} />
+              <Tab.Screen name="Daily" component={Daily} />
+              <Tab.Screen name="Weekly" component={Weekly} />
+              <Tab.Screen name="Monthly" component={Monthly} />
             </Tab.Navigator>
             {/* <Text>Daily, Weekly, Monthly Report Here</Text> */}
           </View>

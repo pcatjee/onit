@@ -139,22 +139,35 @@ let Documents = function (props) {
       ) : (
         <Modal animationType="slide" transparent={true} visible={modal}>
           <View style={styles.modalContainer}>
-            <View>
-              <View style={styles.modalHeaderSection}>
-                <View style={styles.modalHeaderSectionTop}>
+            <View style={styles.modalHeaderSection}>
+              <View style={styles.modalHeaderSectionTop}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Image style={styles.icon} source={FolderIcon} />
                   <Text style={styles.modalHeaderText}>
                     Create New Phonebook
                   </Text>
                 </View>
-
                 <TouchableOpacity onPress={() => setModal(false)}>
                   <Image style={styles.icon} source={Close} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            <View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                width: "90%",
+                height: 40,
+                marginTop: 20,
+              }}
+            >
               <TextInput
                 style={styles.input}
                 onChangeText={(text) => setFolderName(text)}
@@ -162,14 +175,20 @@ let Documents = function (props) {
                 placeholder="Folder Name"
               />
             </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => createFolder(folderName)}
-                style={styles.button}
+
+            <TouchableOpacity
+              onPress={() => createFolder(folderName)}
+              style={styles.button}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "white",
+                }}
               >
-                <Text>Submit</Text>
-              </TouchableOpacity>
-            </View>
+                Submit
+              </Text>
+            </TouchableOpacity>
           </View>
         </Modal>
       )}
@@ -235,12 +254,14 @@ const styles = StyleSheet.create({
     borderColor: "#C0C0C0",
     borderWidth: 1,
   },
+
   modalContainer: {
     height: "30%",
     width: "100%",
-    backgroundColor: "white",
-    // alignItems: "center",
+    // backgroundColor: "white",
+    alignItems: "center",
     position: "absolute",
+    // marginHorizontal: 20,
     bottom: 0,
   },
   modalUpperSection: {
@@ -256,12 +277,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
+
   modalHeaderSectionTop: {
-    display: "flex",
     flexDirection: "row",
-    marginRight: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    width: "90%",
+    // marginRight: 50,
+    // alignItems: "center",
+    justifyContent: "space-between",
   },
   closeIcon: {
     margin: 10,
@@ -271,17 +293,21 @@ const styles = StyleSheet.create({
   modalHeaderText: {
     fontSize: 15,
     fontWeight: "bold",
+    marginLeft: 10,
   },
   input: {
-    // width:"100%",
+    width: "100%",
     padding: 4,
-    backgroundColor: "#ebf4f3",
+    // backgroundColor: "#ebf4f3",
   },
   button: {
-    margin: 4,
-    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    width: "90%",
     padding: 6,
     borderRadius: 4,
+    // marginHorizontal: 20,
     backgroundColor: "#00796A",
   },
 });

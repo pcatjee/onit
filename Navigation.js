@@ -43,6 +43,10 @@ import Locations from "./location";
 import Services from "./src/Services Screen/Services";
 import MyBookings from "./src/screens/MyBookings";
 import TechnicianContacts from "./src/TabsScreen/TechnicianContacts";
+import Daily from "./src/TabsScreen/Daily";
+import Weekly from "./src/TabsScreen/Weekly";
+import Monthly from "./src/TabsScreen/Monthly";
+import TechnicianComponent from "./src/TabsScreen/TechnicianComponent";
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -90,9 +94,18 @@ const Navigation = () => {
         <Stack.Screen name="SuccessFull" component={SuccessFull} />
         <Stack.Screen name="Services" component={Services} />
         <Stack.Screen
+          name="TechnicianComponent"
+          component={TechnicianComponent}
+        />
+
+        <Stack.Screen
           name="TechnicianContacts"
           component={TechnicianContacts}
         />
+
+        <Stack.Screen name="Daily" component={Daily} />
+        <Stack.Screen name="Weekly" component={Weekly} />
+        <Stack.Screen name="Monthly" component={Monthly} />
       </Stack.Navigator>
     </NavigationContainer>
   );

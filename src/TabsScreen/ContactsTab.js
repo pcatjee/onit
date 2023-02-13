@@ -16,6 +16,7 @@ import FolderIcon from "../../assets/image/folder.png";
 import DeleteFolder from "../../assets/image/delete.png";
 import Close from "../../assets/image/close.png";
 import { useNavigation } from "@react-navigation/native";
+import TechnicianCategoryList from "../../const/TechnicianCategoryList";
 
 let ContactsTab = function ({ props }) {
   let folderArray = [
@@ -29,6 +30,10 @@ let ContactsTab = function ({ props }) {
     },
     {
       title: "Technician",
+      numberOfContacts: "0",
+    },
+    {
+      title: "Carpentar",
       numberOfContacts: "0",
     },
   ];
@@ -67,12 +72,12 @@ let ContactsTab = function ({ props }) {
         return (
           <TouchableOpacity
             key={key}
-            // onPress={() => props.navigation.navigate("TechnicianContacts")}
-            onPress={() => navigation.navigate("TechnicianContacts")}
+            // onPress={() => navigation.navigate("TechnicianContacts", val)}
+            onPress={() => navigation.navigate("TechnicianComponent", val)}
           >
             <View style={styles.folderBox}>
               <Text style={styles.folderText}>{val.title}</Text>
-              <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={{ flexDirection: "row" }}>
                 <View
                   style={{
                     width: 30,
@@ -128,22 +133,35 @@ let ContactsTab = function ({ props }) {
       ) : (
         <Modal animationType="slide" transparent={true} visible={modal}>
           <View style={styles.modalContainer}>
-            <View>
-              <View style={styles.modalHeaderSection}>
-                <View style={styles.modalHeaderSectionTop}>
+            <View style={styles.modalHeaderSection}>
+              <View style={styles.modalHeaderSectionTop}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Image style={styles.icon} source={FolderIcon} />
                   <Text style={styles.modalHeaderText}>
                     Create New Phonebook
                   </Text>
                 </View>
-
                 <TouchableOpacity onPress={() => setModal(false)}>
                   <Image style={styles.icon} source={Close} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            <View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                width: "90%",
+                height: 40,
+                marginTop: 20,
+              }}
+            >
               <TextInput
                 style={styles.input}
                 onChangeText={(text) => setFolderName(text)}
@@ -151,14 +169,20 @@ let ContactsTab = function ({ props }) {
                 placeholder="Folder Name"
               />
             </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => createFolder(folderName)}
-                style={styles.button}
+
+            <TouchableOpacity
+              onPress={() => createFolder(folderName)}
+              style={styles.button}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "white",
+                }}
               >
-                <Text>Submit</Text>
-              </TouchableOpacity>
-            </View>
+                Submit
+              </Text>
+            </TouchableOpacity>
           </View>
         </Modal>
       )}
@@ -223,30 +247,29 @@ const styles = StyleSheet.create({
   modalContainer: {
     height: "30%",
     width: "100%",
-    backgroundColor: "white",
-    // alignItems: "center",
+    // backgroundColor: "white",
+    alignItems: "center",
     position: "absolute",
+    // marginHorizontal: 20,
     bottom: 0,
   },
   modalUpperSection: {
-    display: "flex",
     backgroundColor: "green",
   },
 
   modalHeaderSection: {
     padding: 2,
     marginTop: 20,
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    // justifyContent: "space-between",
+    // alignItems: "center",
   },
   modalHeaderSectionTop: {
-    display: "flex",
     flexDirection: "row",
-    marginRight: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    width: "95%",
+    // marginRight: 50,
+    // alignItems: "center",
+    justifyContent: "space-between",
   },
   closeIcon: {
     margin: 10,
@@ -258,15 +281,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   input: {
-    // width:"100%",
+    width: "100%",
     padding: 4,
-    backgroundColor: "#ebf4f3",
+    // backgroundColor: "#ebf4f3",
   },
   button: {
-    margin: 4,
-    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    width: "90%",
     padding: 6,
     borderRadius: 4,
+    // marginHorizontal: 20,
     backgroundColor: "#00796A",
   },
 });

@@ -28,7 +28,8 @@ import FolderIcon from "../../assets/image/folder.png";
 import Close from "../../assets/image/close.png";
 import DeleteIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const TechnicianTab = () => {
+const TechnicianComponent = ({ navigation, route }) => {
+  const technicianCategory = route.params;
   // const [text, onChangeText] = useState("");
 
   // const extraction = samplePlumberList.filter((curElem) => {
@@ -174,12 +175,13 @@ const TechnicianTab = () => {
           alignContent: "center",
         }}
       >
-        Plumber
+        {/* Plumber */}
+        {technicianCategory.title}
       </Text>
 
       {/* <ScrollView>
-        
-      </ScrollView> */}
+          
+        </ScrollView> */}
       <FlatList
         // data={samplePlumberList}
         data={folder}
@@ -270,15 +272,15 @@ const TechnicianTab = () => {
       )}
 
       {/* <TouchableOpacity>
-        <View style={styles.addWrapper}>
-          <Image style={styles.icon} source={PlusIcon} />
-        </View>
-      </TouchableOpacity> */}
+          <View style={styles.addWrapper}>
+            <Image style={styles.icon} source={PlusIcon} />
+          </View>
+        </TouchableOpacity> */}
     </View>
   );
 };
 
-export default TechnicianTab;
+export default TechnicianComponent;
 
 const styles = StyleSheet.create({
   addWrapper: {

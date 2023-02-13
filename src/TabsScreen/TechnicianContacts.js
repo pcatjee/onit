@@ -24,11 +24,13 @@ const { height, width } = Dimensions.get("window");
 
 import TechnicianTab from "./TechnicianTab";
 import DocumentsTab from "./DocumentsTab";
+import TechnicianComponent from "./TechnicianComponent";
 
 const TabNavigator = createMaterialTopTabNavigator(
   {
     TechnicianTab: {
       screen: TechnicianTab,
+      // screen: TechnicianComponent,
       navigationOptions: {
         tabBarLabel: "Contacts",
         showLabel: ({ focused }) => {

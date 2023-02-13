@@ -5,22 +5,44 @@ import {
   Text,
   View,
   TextInput,
+  Modal,
   TouchableOpacity,
   Keyboard,
   ScrollView,
   Image,
+  FlatList,
 } from "react-native";
 import PlusIcon from "react-native-vector-icons/AntDesign";
 import RightIcon from "react-native-vector-icons/MaterialIcons";
+import FolderIcon from "../../assets/image/folder.png";
+import Close from "../../assets/image/close.png";
 import WorkIcon from "react-native-vector-icons/MaterialIcons";
 import BuildingIcon from "react-native-vector-icons/FontAwesome5";
 import FriendsIcon from "react-native-vector-icons/FontAwesome5";
 import AddIcon from "react-native-vector-icons/AntDesign";
+import groupList from "../../const/groupList";
+import Infocirlce from "react-native-vector-icons/AntDesign";
+import CloseIcon from "react-native-vector-icons/AntDesign";
+import { BottomSheet } from "react-native-btr";
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
+  const [modal, setModal] = React.useState(false);
+  const [folderName, setFolderName] = useState("");
+  const toggleBottomNavigationView = () => {
+    setVisible(!visible);
+  };
 
+  // const groupList = [
+  //   {
+  //     id: 1,
+  //     name: "Colleagues",
+  //     icon: <WorkIcon name="work" size={25} color={"#00796A"} />,
+  //   },
+  // ];
+  const [visible, setVisible] = useState(false);
+  const [folder, setFolder] = React.useState(groupList);
   const handleAddTask = () => {
     Keyboard.dismiss();
     setTaskItems([...taskItems, task]);
@@ -32,7 +54,62 @@ export default function App() {
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   };
+  // ====
+  const createFolder = function (name) {
+    let clone = [...folder];
+    let data = {
+      name,
+      icon: <Infocirlce name="infocirlce" size={20} color={"#00796A"} />,
+    };
+    clone.push(data);
+    setFolderName(data);
+    setFolder(clone);
+    toggleBottomNavigationView();
+  };
+  const deleteFolder = function (key) {
+    let cloneArray = [...folder];
+    cloneArray.splice(key, 1);
+    setFolder(cloneArray);
+  };
 
+  // ===
+
+  const Card = ({ groupListing }) => {
+    return (
+      <TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: 20,
+            marginBottom: 1,
+            backgroundColor: "white",
+            height: 60,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            {groupListing.icon}
+
+            <Text
+              style={{
+                marginLeft: 10,
+                fontSize: 18,
+              }}
+            >
+              {groupListing.name}
+            </Text>
+          </View>
+          <RightIcon name="keyboard-arrow-right" size={25} color={"black"} />
+        </View>
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={styles.container}>
       {/* Added this scroll view to enable scrolling when list gets longer than the page */}
@@ -129,26 +206,203 @@ export default function App() {
             >
               Group
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: "#DFEBEA",
-                borderRadius: 5,
-                height: 30,
-                width: 110,
-                paddingHorizontal: 5,
-              }}
+            {/* BottomSheet  */}
+            <BottomSheet
+              visible={visible}
+              onBackButtonPress={toggleBottomNavigationView}
+              onBackdropPress={toggleBottomNavigationView}
             >
-              <PlusIcon name="pluscircleo" size={20} color={"#00796A"} />
-              <Text style={{ marginLeft: 5, color: "#00796A" }}>
-                Create New
-              </Text>
-            </View>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  width: "100%",
+                  height: 200,
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    marginHorizontal: 10,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 15,
+                      marginHorizontal: 20,
+                    }}
+                  >
+                    <Text style={{ fontSize: 22, fontWeight: "600" }}>
+                      Create New Category
+                    </Text>
+                    <TouchableOpacity onPress={toggleBottomNavigationView}>
+                      <CloseIcon
+                        name="close"
+                        size={30}
+                        color={"black"}
+                        // style={{ marginHorizontal: "45%" }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.modalContainer}>
+                    <View
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "90%",
+                        height: 40,
+                        marginTop: 20,
+                      }}
+                    >
+                      <TextInput
+                        style={styles.input}
+                        onChangeText={(text) => setFolderName(text)}
+                        value={folderName}
+                        placeholder="Folder Name"
+                      />
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={() => createFolder(folderName)}
+                      style={styles.button}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: "white",
+                        }}
+                      >
+                        Submit
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </BottomSheet>
+            {/* Modal  */}
+            {/* {!modal ? (
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
+                <TouchableOpacity
+                  onPress={() => setModal(modal ? false : true)}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#DFEBEA",
+                      borderRadius: 5,
+                      height: 30,
+                      width: 110,
+                      paddingHorizontal: 5,
+                    }}
+                  >
+                    <PlusIcon name="pluscircleo" size={20} color={"#00796A"} />
+                    <Text style={{ marginLeft: 5, color: "#00796A" }}>
+                      Create New
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </KeyboardAvoidingView>
+            ) : (
+              <Modal animationType="slide" transparent={true} visible={modal}>
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalHeaderSection}>
+                    <View style={styles.modalHeaderSectionTop}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Image style={styles.icon} source={FolderIcon} />
+                        <Text style={styles.modalHeaderText}>
+                          Create New Phonebook
+                        </Text>
+                      </View>
+                      <TouchableOpacity onPress={() => setModal(false)}>
+                        <Image style={styles.icon} source={Close} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "90%",
+                      height: 40,
+                      marginTop: 20,
+                    }}
+                  >
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={(text) => setFolderName(text)}
+                      value={folderName}
+                      placeholder="Folder Name"
+                    />
+                  </View>
+
+                  <TouchableOpacity
+                    onPress={() => createFolder(folderName)}
+                    style={styles.button}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: "white",
+                      }}
+                    >
+                      Submit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+            )} */}
+            {/* Modal end  */}
+            <TouchableOpacity onPress={toggleBottomNavigationView}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#DFEBEA",
+                  borderRadius: 5,
+                  height: 30,
+                  width: 110,
+                  paddingHorizontal: 5,
+                }}
+              >
+                <PlusIcon name="pluscircleo" size={20} color={"#00796A"} />
+                <Text style={{ marginLeft: 5, color: "#00796A" }}>
+                  Create New
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           {/* Group Items  */}
-          <TouchableOpacity>
+
+          {/* <FlatList
+            style={{ marginTop: 20 }}
+            data={groupList}
+            renderItem={({ item }) => {
+              return <Card groupListing={item} />;
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          /> */}
+          <View style={{ marginTop: 20 }}>
+            {/* {groupList.map((item, key) => { */}
+            {folder.map((item, key) => {
+              return <Card key={key} groupListing={item} />;
+            })}
+          </View>
+
+          {/* <TouchableOpacity>
             <View
               style={{
                 flexDirection: "row",
@@ -183,9 +437,9 @@ export default function App() {
                 color={"black"}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* Room mates  */}
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <View
               style={{
                 flexDirection: "row",
@@ -219,9 +473,9 @@ export default function App() {
                 color={"black"}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* Friends  */}
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <View
               style={{
                 flexDirection: "row",
@@ -254,7 +508,7 @@ export default function App() {
                 color={"black"}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Friends  */}
           <View
@@ -274,28 +528,29 @@ export default function App() {
             >
               Friends
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: "#DFEBEA",
-                borderRadius: 5,
-                height: 30,
-                width: 125,
-                paddingHorizontal: 5,
-              }}
-            >
-              {/* <PlusIcon name="pluscircleo" size={20} color={"#00796A"} /> */}
-              <AddIcon name="adduser" size={20} color={"#00796A"} />
-              <Text
+            <TouchableOpacity>
+              <View
                 style={{
-                  marginLeft: 5,
-                  color: "#00796A",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#DFEBEA",
+                  borderRadius: 5,
+                  height: 30,
+                  width: 125,
+                  paddingHorizontal: 5,
                 }}
               >
-                Invite a Friend
-              </Text>
-            </View>
+                <AddIcon name="adduser" size={20} color={"#00796A"} />
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    color: "#00796A",
+                  }}
+                >
+                  Invite a Friend
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           {/* Friend list  */}
@@ -407,5 +662,56 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "32%",
     borderRadius: 10,
+  },
+  modalContainer: {
+    width: "100%",
+    backgroundColor: "white",
+    alignItems: "center",
+  },
+
+  modalHeaderSection: {
+    padding: 2,
+    marginTop: 20,
+    flexDirection: "row",
+    // justifyContent: "space-between",
+    // alignItems: "center",
+  },
+  modalHeaderSectionTop: {
+    flexDirection: "row",
+    width: "95%",
+    marginTop: 10,
+    backgroundColor: "green",
+    // marginRight: 50,
+    // alignItems: "center",
+    justifyContent: "space-between",
+  },
+  closeIcon: {
+    margin: 10,
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+  modalHeaderText: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  input: {
+    width: "100%",
+    padding: 4,
+    // backgroundColor: "#ebf4f3",
+  },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    width: "90%",
+    padding: 6,
+    borderRadius: 4,
+    // marginHorizontal: 20,
+    backgroundColor: "#00796A",
+  },
+  icon: {
+    marginHorizontal: 10,
+    width: 25,
+    height: 25,
   },
 });
